@@ -25,12 +25,25 @@ module.exports = (db) => {
     })
   }
 
+  const submitAnswer = (request, response) => {
+    const answerID = request.body.answerID
+    console.log('answer submitted', answerID)
+    const data = {
+      cucumber: 'bacon',
+      rice: 'mango'
+    }
+    const myData = JSON.stringify(data)
+    console.log(myData)
+    response.send(myData)
+  }
+
   /**
    * ===========================================
    * Export controller functions as a module
    * ===========================================
    */
   return {
-    displayQuestion: displayQuestion
+    displayQuestion: displayQuestion,
+    submitAnswer: submitAnswer
   }
 }

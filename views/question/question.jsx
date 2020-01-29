@@ -9,11 +9,12 @@ class question extends React.Component {
         <body>
           <h3>{this.props.question}</h3>
           <ul>
-            <li>{this.props.answer_1}</li>
-            <li>{this.props.answer_2}</li>
-            <li>{this.props.answer_3}</li>
-            <li>{this.props.answer_4}</li>
+            <li id='answer_1' className='answer'>{this.props.answer_1}</li>
+            <li id='answer_2' className='answer'>{this.props.answer_2}</li>
+            <li id='answer_3' className='answer'>{this.props.answer_3}</li>
+            <li id='answer_4' className='answer'>{this.props.answer_4}</li>
           </ul>
+          <script src='/quizscript.js' />
         </body>
       </html>
     )

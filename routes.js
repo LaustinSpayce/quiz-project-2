@@ -31,4 +31,5 @@ module.exports = (app, allModels) => {
 
   // Show - Show the specific question.
   app.get('/question/:id', questionControllerCallbacks.displayQuestion)
+  app.post('/question/:id', questionControllerCallbacks.submitAnswer)
 }

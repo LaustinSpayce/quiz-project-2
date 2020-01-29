@@ -25,7 +25,12 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const submitAnswer = (answerNumber, callback) => {
+    console.log('answer' + answerNumber + 'submitted')
+  }
+
   return {
-    getQuestion: getQuestion
+    getQuestion: getQuestion,
+    submitAnswer: submitAnswer
   }
 }
