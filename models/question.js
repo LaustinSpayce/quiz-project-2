@@ -43,7 +43,7 @@ module.exports = (dbPoolInstance) => {
       } else {
         console.log('reported game number:')
         console.log(result)
-        callback(null, answerNumber)
+        commitAnswerToTable(result, playerNo, answerNumber, callback)
       }
     }
     // check if playerNo. QuestionNo. is in database.
@@ -63,6 +63,19 @@ module.exports = (dbPoolInstance) => {
         } else {
           callback(null, null)
         }
+      }
+    })
+  }
+
+  const commitAnswerToTable = (gameID, playerID, answerNo, callback) => {
+    let questionNo = 0
+    game.retrieveCurrentlyActiveQuestion(gameID, (error, queryResult) => {
+      if (error) {
+        console.log('error!', error)
+      } else {
+        questionNo = queryResult
+        console.log('in commit Answer ' + questionNo)
+        callback(null, questionNo)
       }
     })
   }

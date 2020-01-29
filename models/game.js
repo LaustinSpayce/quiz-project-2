@@ -37,10 +37,30 @@ module.exports = (dbPoolInstance) => {
     console.log('We have ran out of questions and so the game will end')
   }
 
+  const retrieveCurrentlyActiveQuestion = (gameID, callback) => {
+    const queryString = 'SELECT active_question FROM game WHERE id=$1;'
+    const queryValues = [gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        console.log('error!')
+        console.log(error)
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length === 0) {
+          console.log('active question ' + queryResult.rows[0])
+          callback(null, queryResult.rows[0])
+        } else {
+          callback(null, null)
+        }
+      }
+    })
+  }
+
   return {
     getAll: getAll,
     beginGame: beginGame,
     nextRound: nextRound,
-    endGame: endGame
+    endGame: endGame,
+    retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion
   }
 }
