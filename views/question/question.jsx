@@ -1,22 +1,28 @@
-var React = require('react')
+const React = require('react')
+const DefaultLayout = require('../layouts/defaultlayout')
 
 class question extends React.Component {
   render () {
-    console.log(this.props.types)
     return (
-      <html>
-        <head />
-        <body>
-          <h2 id='question'>{this.props.question}</h2>
-          <ul>
-            <li id='answer_1' className='answer'>{this.props.answer_1}</li>
-            <li id='answer_2' className='answer'>{this.props.answer_2}</li>
-            <li id='answer_3' className='answer'>{this.props.answer_3}</li>
-            <li id='answer_4' className='answer'>{this.props.answer_4}</li>
-          </ul>
-          <script src='/quizscript.js' />
-        </body>
-      </html>
+      <DefaultLayout>
+        <div className="row">
+        <h2 id='question'>{this.props.question}</h2>
+        </div>
+        <div className="row text-center">
+          <div className="col-md-6 bg-primary border rounded p-1">
+            <div id='answer_1' className='answer display-2'>{this.props.answer_1}</div>
+          </div>
+          <div className="col-md-6 bg-danger border rounded p-1">
+            <div id='answer_2' className='answer display-2'>{this.props.answer_2}</div>
+          </div>
+          <div className="col-md-6 bg-info border rounded p-1">
+            <div id='answer_3' className='answer display-2'>{this.props.answer_3}</div>
+          </div>
+          <div className="col-md-6 bg-warning border rounded p-1">
+            <div id='answer_4' className='answer display-2'>{this.props.answer_4}</div>
+          </div>
+        </div>
+      </DefaultLayout>
     )
   }
 }

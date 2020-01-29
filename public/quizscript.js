@@ -20,6 +20,7 @@ const onAnswerClick = (event) => {
   request.send(JSON.stringify(data))
 }
 
+// Applying event listeners to each answer item.
 for (const answerItem of answerItems) {
   answerItem.addEventListener('click', onAnswerClick)
 }
