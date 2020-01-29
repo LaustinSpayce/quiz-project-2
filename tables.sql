@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS player (
 CREATE TABLE IF NOT EXISTS game (
   id SERIAL PRIMARY KEY,
   name TEXT,
-  number_of_questions
+  number_of_questions INT
 );
 
 CREATE TABLE IF NOT EXISTS question (
