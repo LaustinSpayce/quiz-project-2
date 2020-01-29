@@ -4,35 +4,28 @@
  * ===========================================
  */
 module.exports = (dbPoolInstance) => {
-
   // `dbPoolInstance` is accessible within this function scope
 
-  let getAll = (callback) => {
-
-    let query = 'SELECT * FROM games';
+  const getAll = (callback) => {
+    const query = 'SELECT * FROM games'
 
     dbPoolInstance.query(query, (error, queryResult) => {
-      if( error ){
-
+      if (error) {
         // invoke callback function with results after query has executed
-        callback(error, null);
-
-      }else{
-
+        callback(error, null)
+      } else {
         // invoke callback function with results after query has executed
 
-        if( queryResult.rows.length > 0 ){
-          callback(null, queryResult.rows);
-
-        }else{
-          callback(null, null);
-
+        if (queryResult.rows.length > 0) {
+          callback(null, queryResult.rows)
+        } else {
+          callback(null, null)
         }
       }
-    });
-  };
+    })
+  }
 
   return {
-    getAll: getAll,
-  };
-};
+    getAll: getAll
+  }
+}

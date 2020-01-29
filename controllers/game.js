@@ -1,17 +1,19 @@
 module.exports = (db) => {
-
   /**
    * ===========================================
    * Controller logic
    * ===========================================
    */
 
-  let indexControllerCallback = (request, response) => {
-      db.game.getAll((error, allgame) => {
-        response.render('game/index', { allgame });
-      });
-  };
-
+  const indexControllerCallback = (request, response) => {
+    db.game.getAll((error, allgame) => {
+      if (error) {
+        console.log('Error!')
+        console.log(error)
+      }
+      response.render('game/index', { allgame })
+    })
+  }
 
   /**
    * ===========================================
@@ -19,7 +21,6 @@ module.exports = (db) => {
    * ===========================================
    */
   return {
-    index: indexControllerCallback,
-  };
-
+    index: indexControllerCallback
+  }
 }

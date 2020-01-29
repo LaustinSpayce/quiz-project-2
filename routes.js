@@ -1,6 +1,4 @@
 module.exports = (app, allModels) => {
-
-
   /*
    *  =========================================
    *  =========================================
@@ -13,8 +11,8 @@ module.exports = (app, allModels) => {
    */
 
   // require the controller
-  const gameControllerCallbacks = require('./controllers/game')(allModels);
+  const gameControllerCallbacks = require('./controllers/game')(allModels)
 
-  app.get('/game', gameControllerCallbacks.index);
-  //app.get('/games/:id', games.getgame);
-};
+  app.get('/game', gameControllerCallbacks.index)
+  // app.get('/games/:id', games.getgame);
+}
