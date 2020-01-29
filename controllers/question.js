@@ -28,13 +28,20 @@ module.exports = (db) => {
   const submitAnswer = (request, response) => {
     const answerID = request.body.answerID
     console.log('answer submitted', answerID)
-    const data = {
-      cucumber: 'bacon',
-      rice: 'mango'
+
+    const sendData = (error, result) => {
+      if (error) {
+        console.log('error!')
+        console.log(error)
+      } else {
+        const data = result
+        const myData = JSON.stringify(data)
+        console.log(myData)
+        response.send(myData)
+      }
     }
-    const myData = JSON.stringify(data)
-    console.log(myData)
-    response.send(myData)
+
+    db.question.submitAnswer(request.body.answerID, sendData)
   }
 
   /**

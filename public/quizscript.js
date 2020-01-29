@@ -9,6 +9,7 @@ const responseHandler = function () {
   console.log('status code', this.status)
 }
 
+// When you click the answer it is sent to the server.
 const onAnswerClick = (event) => {
   const answerID = event.target.id
   const data = { answerID: answerID }

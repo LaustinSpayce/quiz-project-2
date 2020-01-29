@@ -7,7 +7,7 @@ class question extends React.Component {
       <html>
         <head />
         <body>
-          <h3>{this.props.question}</h3>
+          <h2 id='question'>{this.props.question}</h2>
           <ul>
             <li id='answer_1' className='answer'>{this.props.answer_1}</li>
             <li id='answer_2' className='answer'>{this.props.answer_2}</li>
