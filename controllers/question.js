@@ -27,7 +27,7 @@ module.exports = (db) => {
 
   const submitAnswer = (request, response) => {
     const answerID = request.body.answerID
-    console.log('answer submitted', answerID)
+    const playerNo = 1 // Player 1 as we assume it's solo so far.
 
     const sendData = (error, result) => {
       if (error) {
@@ -41,7 +41,7 @@ module.exports = (db) => {
       }
     }
 
-    db.question.submitAnswer(request.body.answerID, sendData)
+    db.question.submitAnswer(answerID, playerNo, sendData)
   }
 
   /**

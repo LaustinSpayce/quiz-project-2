@@ -1,3 +1,5 @@
+const ROUND_TIMER = 10000 // 10 seconds.
+
 /**
  * ===========================================
  * Export model functions as a module
@@ -25,13 +27,54 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
-  const submitAnswer = (answerNumber, callback) => {
-    console.log('answer' + answerNumber + 'submitted')
-    callback(null, answerNumber)
+  const startQuestionTimer = () => {
+    console.log('Question stops receiving answers in ' + ROUND_TIMER)
+  }
+
+  const submitAnswer = (answerNumber, playerNo, callback) => {
+    console.log('answer ' + answerNumber + ' submitted by player ' + playerNo)
+    // Check currently active question.
+    // playerNo. is only active in one game, so check the active_question of
+    // the game the player is in.
+
+    const checkActiveGameCallback = (error, result) => {
+      if (error) {
+        console.log('error', error)
+      } else {
+        console.log('reported game number:')
+        console.log(result)
+        callback(null, answerNumber)
+      }
+    }
+    // check if playerNo. QuestionNo. is in database.
+    checkActiveGameForPlayer(playerNo, checkActiveGameCallback)
+  }
+
+  const checkActiveGameForPlayer = (playerNo, callback) => {
+    const queryString = 'SELECT game_id FROM player WHERE id=$1;'
+    const queryValues = [playerNo]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length > 0) {
+          console.log()
+          callback(null, queryResult.rows[0])
+        } else {
+          callback(null, null)
+        }
+      }
+    })
+  }
+
+  const answerResults = () => {
+    console.log('What happens when the timer runs out')
   }
 
   return {
     getQuestion: getQuestion,
-    submitAnswer: submitAnswer
+    submitAnswer: submitAnswer,
+    startQuestionTimer: startQuestionTimer,
+    answerResults: answerResults
   }
 }

@@ -1,12 +1,15 @@
 CREATE TABLE IF NOT EXISTS player (
   id SERIAL PRIMARY KEY,
-  name TEXT
+  name TEXT,
+  token TEXT,
+  game_id INT
 );
 
 CREATE TABLE IF NOT EXISTS game (
   id SERIAL PRIMARY KEY,
   name TEXT,
-  number_of_questions INT
+  number_of_questions INT,
+  active_question INT
 );
 
 CREATE TABLE IF NOT EXISTS question (
@@ -30,11 +33,4 @@ CREATE TABLE IF NOT EXISTS game_player_questions (
   player_id INT,
   game_questions_id INT,
   player_answer INT
-);
-
-CREATE TABLE IF NOT EXISTS game_player (
-  id SERIAL PRIMARY KEY,
-  game_id INT,
-  player_id INT,
-  player_score INT
 );

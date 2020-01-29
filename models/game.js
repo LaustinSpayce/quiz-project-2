@@ -25,7 +25,22 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const beginGame = () => {
+    console.log('Beginning')
+  }
+
+  const nextRound = () => {
+    console.log('Onward to the next question!')
+  }
+
+  const endGame = () => {
+    console.log('We have ran out of questions and so the game will end')
+  }
+
   return {
-    getAll: getAll
+    getAll: getAll,
+    beginGame: beginGame,
+    nextRound: nextRound,
+    endGame: endGame
   }
 }
