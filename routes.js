@@ -16,7 +16,6 @@ module.exports = (app, allModels) => {
   // This is where all the magic happens, players are on this link while they play.
   app.get('/game/:id', gameControllerCallbacks.play)
 
-  app.get('/game', gameControllerCallbacks.index)
   // app.get('/games/:id', games.getgame);
 
   //

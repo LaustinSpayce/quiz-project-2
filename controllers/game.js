@@ -7,16 +7,6 @@ module.exports = (db) => {
      * ===========================================
      */
 
-  const indexControllerCallback = (request, response) => {
-    db.game.getAll((error, allgame) => {
-      if (error) {
-        console.log('Error!')
-        console.log(error)
-      }
-      response.redirect('/question/1')
-    })
-  }
-
   // This is the function that is hit when the player tries to join a game.
   // '/game/:id', gameControllerCallbacks.play
   const playGameController = (request, response) => {
@@ -224,7 +214,6 @@ module.exports = (db) => {
  * ===========================================
  */
   return {
-    index: indexControllerCallback,
     play: playGameController,
     clientGameController: clientGameController,
     addNewPlayer: addNewPlayer,

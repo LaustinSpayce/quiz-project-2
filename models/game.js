@@ -12,24 +12,7 @@ const ROUND_TIMER = 10000
 module.exports = (dbPoolInstance) => {
   // `dbPoolInstance` is accessible within this function scope
 
-  const getAll = (callback) => {
-    const query = 'SELECT * FROM games'
-    dbPoolInstance.query(query, (error, queryResult) => {
-      if (error) {
-        // invoke callback function with results after query has executed
-        callback(error, null)
-      } else {
-        // invoke callback function with results after query has executed
-
-        if (queryResult.rows.length > 0) {
-          callback(null, queryResult.rows)
-        } else {
-          callback(null, null)
-        }
-      }
-    })
-  }
-
+  // Start a brand new game.
   const beginGame = (gameID, callback) => {
     setActiveQuestion(gameID, 1, (error, queryResult) => {
       if (error) {
@@ -40,6 +23,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Set the question to provided game.
   const setActiveQuestion = (gameID, questionID, callback) => {
     const queryString = 'UPDATE game SET active_question = $1, game_state = $2 WHERE id = $3 RETURNING *;'
     const queryValues = [questionID, GAME_STATE.QUESTION, gameID]
@@ -52,10 +36,12 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Move forward to the next question
   const nextRound = () => {
     console.log('Onward to the next question!')
   }
 
+  // Go from being in a question to between rounds. (Show the scores)
   const betweenRounds = (gameID, callback) => {
     const queryString = 'UPDATE game SET active_question = 0, game_state = $1 WHERE id = $3 RETURNING *;'
     const queryValues = [GAME_STATE.BETWEENROUNDS, gameID]
@@ -68,10 +54,12 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // When we run out of questions this will show up.
   const endGame = () => {
     console.log('We have ran out of questions and so the game will end')
   }
 
+  // const send back what the current game state is.
   const currentGameState = (gameID, callback) => {
     const queryString = 'SELECT * FROM game WHERE id=$1;'
     const queryValues = [parseInt(gameID)]
@@ -88,6 +76,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Someone can only join a game if they know the password (provided as a query)
   const checkGameIDAgainstPassword = (gameID, inviteID, callback) => {
     const queryString = 'SELECT * FROM game WHERE id=$1, invite_password=$1;'
     const queryValues = [parseInt(gameID), inviteID]
@@ -104,6 +93,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Read a player's cookie, compare it in the database and return their player id
   const getPlayerID = (token, callback) => {
     // Actually replace this with a query
     const result = [{
@@ -290,7 +280,6 @@ module.exports = (dbPoolInstance) => {
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
-    getAll: getAll,
     beginGame: beginGame,
     nextRound: nextRound,
     endGame: endGame,
