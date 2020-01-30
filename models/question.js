@@ -1,3 +1,4 @@
+const GAME_STATE = require('../public/gamestate')
 const ROUND_TIMER = 10000 // 10 seconds.
 
 /**
@@ -149,6 +150,11 @@ module.exports = (dbPoolInstance) => {
         callback(error, null)
       } else {
         if (queryResult.rows.length === 1) {
+          if (queryResult.rows[0] === 0) {
+            const gameState = GAME_STATE.BETWEENROUNDS
+            callback(null, gameState)
+            return
+          }
           const activeQuestion = queryResult.rows[0].active_question
           const secondQuery = 'SELECT * FROM game_questions WHERE game_id=$1 AND question_id=$2'
           const secondQueryValues = [gameID, activeQuestion]

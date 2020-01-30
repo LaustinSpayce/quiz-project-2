@@ -1,6 +1,7 @@
 console.log('hello! I have loaded the browser quiz script!')
 
 const answerItems = document.querySelectorAll('.answer')
+let questionID = 1
 
 // Do NOT use arrow functions if you depends on this.blah
 const responseHandler = function () {
@@ -15,7 +16,7 @@ const onAnswerClick = (event) => {
   const data = { answerID: answerID }
   const request = new XMLHttpRequest()
   request.addEventListener('load', responseHandler)
-  request.open('POST', '1')
+  request.open('POST', questionID)
   request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   request.send(JSON.stringify(data))
 }

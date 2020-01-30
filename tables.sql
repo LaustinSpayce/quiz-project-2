@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS game (
   id SERIAL PRIMARY KEY,
   name TEXT,
   number_of_questions INT,
-  active_question INT
+  active_question INT,
+  game_state TEXT
 );
 
 CREATE TABLE IF NOT EXISTS question (

@@ -56,9 +56,11 @@ pool.on('error', function (err) {
 
 const allGameModelsFunction = require('./models/game')
 const allQuestionModelsFunction = require('./models/question')
+const allPlayerModelsFunction = require('./models/player')
 
 const gameModelsObject = allGameModelsFunction(pool)
 const questionModelsObject = allQuestionModelsFunction(pool)
+const playerModelsObject = allPlayerModelsFunction(pool)
 
 /*
  * ===================================================
@@ -87,5 +89,6 @@ module.exports = {
 
   // users: userModelsObject,
   game: gameModelsObject,
-  question: questionModelsObject
+  question: questionModelsObject,
+  player: playerModelsObject
 }

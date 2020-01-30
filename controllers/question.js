@@ -27,21 +27,27 @@ module.exports = (db) => {
 
   const submitAnswer = (request, response) => {
     const answerID = request.body.answerID
-    const playerNo = 1 // Player 1 as we assume it's solo so far.
-
-    const sendData = (error, result) => {
+    const token = 'aaaaa' // replace with actual cookie token.
+    db.player.getPlayerID(token, (error, result) => {
       if (error) {
-        console.log('error!')
-        console.log(error)
-      } else {
-        const data = result
-        const myData = JSON.stringify(data)
-        console.log(myData)
-        response.send(myData)
+        console.log('error!', error)
+        return
       }
-    }
-
-    db.question.submitAnswer(answerID, playerNo, sendData)
+      const playerNo = result[0].id
+      console.log('player number ' + playerNo)
+      const sendData = (error, result) => {
+        if (error) {
+          console.log('error!')
+          console.log(error)
+        } else {
+          const data = result
+          const myData = JSON.stringify(data)
+          console.log(myData)
+          response.send(myData)
+        }
+      }
+      db.question.submitAnswer(answerID, playerNo, sendData)
+    })
   }
 
   /**
