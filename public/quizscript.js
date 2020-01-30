@@ -9,6 +9,9 @@ const GAME_STATE = {
 console.log('hello! I have loaded the browser quiz script!')
 
 const mainContentDisplay = document.querySelector('#displayContent')
+const advanceGameStateButton = document.querySelector('#advanceGameState')
+const restartGameButton = document.querySelector('#resetGame')
+
 let clientGameState = GAME_STATE.NONE
 let answerItems = []
 let questionAnswered = false
@@ -58,6 +61,13 @@ const mainContentResponseHandler = function() {
   }
 }
 
+const advanceGameState = function() {
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', mainContentResponseHandler)
+  request.open('GET', '/game/1/controller')
+  request.send()
+}
+
 const updateCurrentGameState = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', mainContentResponseHandler)
@@ -75,7 +85,6 @@ const responseHandler = function () {
   console.log('status text', this.statusText)
   console.log('status code', this.status)
 }
-
 
 // When you click the answer it is sent to the server.
 const onAnswerClick = function(event) {
