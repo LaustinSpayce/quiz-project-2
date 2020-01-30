@@ -67,7 +67,19 @@ module.exports = (dbPoolInstance) => {
   }
 
   const currentGameState = (gameID, callback) => {
-    callback()
+    const queryString = 'SELECT * FROM game WHERE id=$1;'
+    const queryValues = [parseInt(gameID)]
+    dbPoolInstance.query(queryString, queryValues, function (error, queryResult) {
+      if (error) {
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length > 0) {
+          callback(null, queryResult.rows[0])
+        } else {
+          callback(null, null)
+        }
+      }
+    })
   }
 
   const checkGameIDAgainstPassword = (gameID, inviteID, callback) => {

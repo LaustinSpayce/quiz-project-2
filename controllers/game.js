@@ -124,17 +124,45 @@ module.exports = (db) => {
     console.log('beginning again')
   }
 
-  const advanceGameState = async (request, response) => {
+  const advanceGameState = (request, response) => {
     console.log('debug advance game state game hit')
     const token = request.cookies.playerToken
-    const result = await db.player.getPlayerID(token)
-    console.log(result)
-    const replydata = { message: 'Game state advanced!' }
-    const responseJSON = JSON.stringify(replydata)
-    response.send(responseJSON)
+
+    const fetchedCurrentGameState = (error, queryResult) => {
+      if (error) {
+        console.log(error)
+        return
+      }
+      console.log(queryResult)
+      const currentGameState = queryResult.game_state
+      console.log('current game state :' + currentGameState)
+      const replydata = {
+        message: 'Game state advanced!',
+        gameState: currentGameState
+      }
+      const responseJSON = JSON.stringify(replydata)
+      response.send(responseJSON)
+    }
+
+    const moveToNextStage = (error, queryResult) => {
+      if (error) {
+        console.log('error', error)
+        return
+      }
+      console.log('query Result')
+      console.log(queryResult)
+      const playerIDResult = queryResult[0]
+      const gameID = playerIDResult.game_id.toString()
+      console.log(gameID)
+      if (gameID === request.params.id) {
+        db.game.currentGameState(gameID, fetchedCurrentGameState)
+      }
+    }
+
+    db.player.getPlayerID(token, moveToNextStage)
   }
 
-  const restartGame = async (request, response) => {
+  const restartGame = (request, response) => {
     console.log('debug restart game hit')
   }
 
