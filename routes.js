@@ -12,7 +12,6 @@ module.exports = (app, allModels) => {
 
   // require the controller
   const gameControllerCallbacks = require('./controllers/game')(allModels)
-  const questionControllerCallbacks = require('./controllers/question')(allModels)
 
   // This is where all the magic happens, players are on this link while they play.
   app.get('/game/:id', gameControllerCallbacks.play)
@@ -33,8 +32,8 @@ module.exports = (app, allModels) => {
   // Destroy
 
   // Show - Show the specific question.
-  app.get('/question/:id', questionControllerCallbacks.displayQuestion)
-  app.post('/question/:id', questionControllerCallbacks.submitAnswer)
+  app.get('/question/:id', gameControllerCallbacks.displayQuestion)
+  app.post('/question/:id', gameControllerCallbacks.submitAnswer)
 
   app.get('/game/:id/play', gameControllerCallbacks.startSession)
 

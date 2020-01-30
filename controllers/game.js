@@ -51,7 +51,7 @@ module.exports = (db) => {
         }
       }
     }
-    db.player.getPlayerID(playerToken, afterGetPlayerId)
+    db.game.getPlayerID(playerToken, afterGetPlayerId)
     // redirect them to that.
     // Check the game is accepting invites (GAME_STATE.STARTING)
     // If yes, prompt for a name.
@@ -91,7 +91,7 @@ module.exports = (db) => {
       response.send(mydata)
     }
 
-    db.question.retrieveCurrentlyActiveQuestion(gameID, onAuthorisation)
+    db.game.retrieveCurrentlyActiveQuestion(gameID, onAuthorisation)
     // Is the game accepting registrations?
     // >> If yes then assign them a cookie for the game and update the state.
 
@@ -102,7 +102,7 @@ module.exports = (db) => {
   const startSession = (request, response) => {
     // authenticate the user first
     const playerToken = 'aaaaa'
-    db.player.getPlayerID(playerToken, (error, queryResult) => {
+    db.game.getPlayerID(playerToken, (error, queryResult) => {
       console.log(queryResult)
       if (error) {
         console.log('error', error)
@@ -159,11 +159,63 @@ module.exports = (db) => {
       }
     }
 
-    db.player.getPlayerID(token, moveToNextStage)
+    db.game.getPlayerID(token, moveToNextStage)
   }
 
   const restartGame = (request, response) => {
     console.log('debug restart game hit')
+  }
+
+  /**
+   * ===========================================
+   * Question Controller logic
+   * ===========================================
+   */
+
+  const displayQuestion = (request, response) => {
+    const questionID = request.params.id
+    db.game.getQuestion(questionID, (error, question) => {
+      if (error) {
+        console.log('Error!')
+        console.log(error)
+      }
+
+      const data = {
+        question: question.question,
+        answer_1: question.answer_1,
+        answer_2: question.answer_2,
+        answer_3: question.answer_3,
+        answer_4: question.answer_4,
+        gameState: GAME_STATE.QUESTION
+      }
+
+      response.render('question/question', data)
+    })
+  }
+
+  const submitAnswer = (request, response) => {
+    const answerID = request.body.answerID
+    const token = 'aaaaa' // replace with actual cookie token.
+    db.game.getPlayerID(token, (error, result) => {
+      if (error) {
+        console.log('error!', error)
+        return
+      }
+      const playerNo = result[0].id
+      console.log('player number ' + playerNo)
+      const sendData = (error, result) => {
+        if (error) {
+          console.log('error!')
+          console.log(error)
+        } else {
+          const data = result
+          const myData = JSON.stringify(data)
+          console.log(myData)
+          response.send(myData)
+        }
+      }
+      db.game.submitAnswer(answerID, playerNo, sendData)
+    })
   }
 
   /**
@@ -179,6 +231,8 @@ module.exports = (db) => {
     startSession: startSession,
     advanceGameState: advanceGameState,
     restartGame: restartGame,
-    beginGame: beginGame
+    beginGame: beginGame,
+    displayQuestion: displayQuestion,
+    submitAnswer: submitAnswer
   }
 }
