@@ -4,7 +4,7 @@ const DefaultLayout = require('../layouts/defaultlayout')
 class question extends React.Component {
   render () {
     return (
-      <DefaultLayout>
+      <div>
         <div className="row">
         <h2 id='question'>{this.props.question}</h2>
         </div>
@@ -22,7 +22,7 @@ class question extends React.Component {
             <div id='answer_4' className='answer display-2'>{this.props.answer_4}</div>
           </div>
         </div>
-      </DefaultLayout>
+      </div>
     )
   }
 }

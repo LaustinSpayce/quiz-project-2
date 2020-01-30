@@ -1,3 +1,5 @@
+const GAME_STATE = require('../public/gamestate')
+
 module.exports = (db) => {
   /**
    * ===========================================
@@ -18,7 +20,8 @@ module.exports = (db) => {
         answer_1: question.answer_1,
         answer_2: question.answer_2,
         answer_3: question.answer_3,
-        answer_4: question.answer_4
+        answer_4: question.answer_4,
+        gameState: GAME_STATE.QUESTION
       }
 
       response.render('question/question', data)

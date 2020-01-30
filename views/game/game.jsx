@@ -5,8 +5,9 @@ class Game extends React.Component {
   render () {
     return (
       <DefaultLayout>
-        <div id="DisplayContent">
+        <div id="displayContent">
         </div>
+        <script src='/quizscript.js' />
       </DefaultLayout>
     )
   }
