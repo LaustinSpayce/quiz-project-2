@@ -163,8 +163,8 @@ module.exports = (dbPoolInstance) => {
               console.log(error)
             } else {
               if (secondQueryValues.length > 0) {
-                console.log('game_questions')
-                console.log(secondQueryResults.rows)
+                // console.log('game_questions')
+                // console.log(secondQueryResults.rows)
                 callback(null, secondQueryResults.rows[0])
               } else {
                 callback(null, null)

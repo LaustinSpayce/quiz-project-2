@@ -10,14 +10,51 @@ console.log('hello! I have loaded the browser quiz script!')
 
 const mainContentDisplay = document.querySelector('#displayContent')
 let clientGameState = GAME_STATE.NONE
+let answerItems = []
+let questionAnswered = false
+let questionID = 0
+
+const showQuestion = function() {
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', function() {
+    mainContentDisplay.innerHTML = this.responseText
+    answerItems = document.querySelectorAll('.answer')
+    questionAnswered = false;
+
+    for (const answerItem of answerItems) {
+      answerItem.addEventListener('click', onAnswerClick)
+    }
+  })
+  request.open('GET', '/question/1')
+  request.send()
+}
 
 const mainContentResponseHandler = function() {
-  console.log(this.responseText)
-  mainContentDisplay.innerHTML = this.responseText
+  // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
-  console.log(data)
+  questionID = data.questionNo
+  // console.log(data)
   if (data.gameState !== clientGameState) {
+    clientGameState = data.gameState
     console.log('change!')
+    switch (data.gameState) {
+      case GAME_STATE.STARTING:
+        console.log('game now starting!')
+        break
+      case GAME_STATE.QUESTION:
+        showQuestion()
+        break
+      case GAME_STATE.BETWEENROUNDS:
+        console.log('Show us the scores George Dawes!')
+        break
+      case GAME_STATE.GAMEOVER:
+        console.log('Game over, final score')
+        break
+      default:
+        console.log('you should not be here')
+        break
+
+    }
   }
 }
 
@@ -28,30 +65,27 @@ const updateCurrentGameState = function() {
   request.send()
 }
 
-// let pingTheServer = setInterval(updateCurrentGameState, 1000)
+let pingTheServer = setInterval(updateCurrentGameState, 1000)
 
-// const answerItems = document.querySelectorAll('.answer')
 // let questionID = 1
 //
 // // Do NOT use arrow functions if you depends on this.blah
-// const responseHandler = function () {
-//   console.log('response text', this.responseText)
-//   console.log('status text', this.statusText)
-//   console.log('status code', this.status)
-// }
-//
-// // When you click the answer it is sent to the server.
-// const onAnswerClick = (event) => {
-//   const answerID = event.target.id
-//   const data = { answerID: answerID }
-//   const request = new XMLHttpRequest()
-//   request.addEventListener('load', responseHandler)
-//   request.open('POST', questionID)
-//   request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
-//   request.send(JSON.stringify(data))
-// }
-//
-// // Applying event listeners to each answer item.
-// for (const answerItem of answerItems) {
-//   answerItem.addEventListener('click', onAnswerClick)
-// }
+const responseHandler = function () {
+  console.log('response text', this.responseText)
+  console.log('status text', this.statusText)
+  console.log('status code', this.status)
+}
+
+
+// When you click the answer it is sent to the server.
+const onAnswerClick = function(event) {
+  if (questionAnswered) return
+  const answerID = event.target.id
+  const data = { answerID: answerID }
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', responseHandler)
+  questionAnswered = true
+  request.open('POST', questionID)
+  request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+  request.send(JSON.stringify(data))
+}

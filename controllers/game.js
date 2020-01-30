@@ -73,16 +73,25 @@ module.exports = (db) => {
 
   const clientGameController = (request, response) => {
     const gameID = request.params.id
-    const data = {
-      gameState: GAME_STATE.QUESTION,
-      gameID: gameID
-    }
-    const mydata = JSON.stringify(data)
-    response.send(mydata)
     // Do they have a player cookie?
     // >> Is the player cookie valid for this game?
     // >>>> If yes then jump right on into the game whatever the state is.
+    const onAuthorisation = (error, queryResult) => {
+      if (error) {
+        console.log('error')
+        return
+      }
+      const questionNo = queryResult.question_id
+      const data = {
+        gameState: GAME_STATE.QUESTION,
+        gameID: gameID,
+        questionNo: questionNo
+      }
+      const mydata = JSON.stringify(data)
+      response.send(mydata)
+    }
 
+    db.question.retrieveCurrentlyActiveQuestion(gameID, onAuthorisation)
     // Is the game accepting registrations?
     // >> If yes then assign them a cookie for the game and update the state.
 
