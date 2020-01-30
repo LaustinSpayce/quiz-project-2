@@ -1,3 +1,10 @@
+const GAME_STATE = {
+  STARTING: 'starting', // Allow new players to sign up
+  QUESTION: 'question', // Question posed, allow answers
+  BETWEENROUNDS: 'betweenRounds', // Between questions
+  GAMEOVER: 'gameOver' // Game fnished.
+}
+
 console.log('hello! I have loaded the browser quiz script!')
 
 const answerItems = document.querySelectorAll('.answer')

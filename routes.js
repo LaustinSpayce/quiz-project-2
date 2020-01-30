@@ -14,6 +14,9 @@ module.exports = (app, allModels) => {
   const gameControllerCallbacks = require('./controllers/game')(allModels)
   const questionControllerCallbacks = require('./controllers/question')(allModels)
 
+  // This is where all the magic happens, players are on this link while they play.
+  app.get('/game/:id', gameControllerCallbacks.play)
+
   app.get('/game', gameControllerCallbacks.index)
   // app.get('/games/:id', games.getgame);
 
