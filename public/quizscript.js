@@ -28,7 +28,7 @@ const updateCurrentGameState = function() {
   request.send()
 }
 
-let pingTheServer = setInterval(updateCurrentGameState, 1000)
+// let pingTheServer = setInterval(updateCurrentGameState, 1000)
 
 // const answerItems = document.querySelectorAll('.answer')
 // let questionID = 1

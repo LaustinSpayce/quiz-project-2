@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS game (
   name TEXT,
   number_of_questions INT,
   active_question INT,
-  game_state TEXT
+  game_state TEXT,
+  invite_password TEXT
 );
 
 CREATE TABLE IF NOT EXISTS question (

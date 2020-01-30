@@ -8,13 +8,23 @@
 
 module.exports = (dbPoolInstance) => {
   // `dbPoolInstance` is accessible within this function scope
+
   const getPlayerID = (token, callback) => {
-    callback(null, [{ id: 1 }])
+    // Actually replace this with a query
+    callback(null, [{
+      id: 1,
+      game_id: 1
+    }])
+  }
+
+  const addPlayerToGame = (playID, gameID, callback) => {
+    console.log('bah')
   }
 
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
-    getPlayerID: getPlayerID
+    getPlayerID: getPlayerID,
+    addPlayerToGame: addPlayerToGame
   }
 }

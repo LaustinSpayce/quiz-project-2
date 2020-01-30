@@ -54,9 +54,9 @@ VALUES
 ('testPlayer', 'aaaaa', 1);
 
 INSERT INTO game
-(name, number_of_questions, active_question)
+(name, number_of_questions, active_question, invite_password)
 VALUES
-('testGame', 10, 1);
+('testGame', 10, 1, 'password');
 
 INSERT INTO game_questions
 (question_id, game_id, ordering)
