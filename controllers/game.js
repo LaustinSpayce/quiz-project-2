@@ -120,6 +120,11 @@ module.exports = (db) => {
     })
   }
 
+  const beginGame = (request, response) => {
+    
+    db.game.beginGame(callback)
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module

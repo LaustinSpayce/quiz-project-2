@@ -38,6 +38,8 @@ module.exports = (app, allModels) => {
 
   app.get('/game/:id/play', gameControllerCallbacks.startSession)
 
+  // app.get('/game/:id/play', gameControllerCallbacks.)
+
   // Pinged every second to update the game.
   app.get('/game/:id/controller', gameControllerCallbacks.clientGameController)
 }

@@ -12,7 +12,7 @@ const mainContentDisplay = document.querySelector('#displayContent')
 let clientGameState = GAME_STATE.NONE
 let answerItems = []
 let questionAnswered = false
-let questionID = 0
+let questionNo = 0
 
 const showQuestion = function() {
   const request = new XMLHttpRequest()
@@ -32,7 +32,7 @@ const showQuestion = function() {
 const mainContentResponseHandler = function() {
   // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
-  questionID = data.questionNo
+  questionNo = data.questionNo
   // console.log(data)
   if (data.gameState !== clientGameState) {
     clientGameState = data.gameState
@@ -67,7 +67,7 @@ const updateCurrentGameState = function() {
 
 let pingTheServer = setInterval(updateCurrentGameState, 1000)
 
-// let questionID = 1
+// let questionNo = 1
 //
 // // Do NOT use arrow functions if you depends on this.blah
 const responseHandler = function () {
@@ -85,7 +85,8 @@ const onAnswerClick = function(event) {
   const request = new XMLHttpRequest()
   request.addEventListener('load', responseHandler)
   questionAnswered = true
-  request.open('POST', questionID)
+  const posturl = '/question/' + questionNo
+  request.open('POST', posturl)
   request.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
   request.send(JSON.stringify(data))
 }

@@ -1,4 +1,7 @@
-// const GAME_STATE = require('../public/gamestate')
+const GAME_STATE = require('../public/gamestate')
+
+const ROUND_TIMER = 10000
+const BETWEEN_ROUNDS = 5000
 
 /**
  * ===========================================
@@ -27,16 +30,36 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
-  const beginGame = () => {
-    console.log('Beginning')
+  const beginGame = (gameID, callback) => {
+    setActiveQuestion(gameID, 1, (error, queryResult) => {
+      if (error) {
+        console.log(error)
+      } else {
+        const nextRound = setTimeout(betweenRounds, ROUND_TIMER)
+      }
+    })
+  }
+
+  const setActiveQuestion = (gameID, questionID, callback) => {
+    const queryString = 'UPDATE game SET active_question = $1, game_state = $2 WHERE id = $3 RETURNING *;'
+    const queryValues = [questionID, GAME_STATE.QUESTION, gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult)
+      }
+    })
   }
 
   const nextRound = () => {
     console.log('Onward to the next question!')
   }
 
-  const betweenRounds = () => {
-    console.log('We are between rounds, showing scores or whatever')
+  const betweenRounds = (gameID, callback) => {
+    const queryString = 'UPDATE game SET active_question = 0, game_state = $1 WHERE id = $3 RETURNING *;'
+    const queryValues = [GAME_STATE.BETWEENROUNDS, gameID]
+    dbPoolInstance.query(queryString, queryValues, callback)
   }
 
   const endGame = () => {
