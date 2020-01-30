@@ -59,7 +59,13 @@ module.exports = (dbPoolInstance) => {
   const betweenRounds = (gameID, callback) => {
     const queryString = 'UPDATE game SET active_question = 0, game_state = $1 WHERE id = $3 RETURNING *;'
     const queryValues = [GAME_STATE.BETWEENROUNDS, gameID]
-    dbPoolInstance.query(queryString, queryValues, callback)
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult)
+      }
+    })
   }
 
   const endGame = () => {
