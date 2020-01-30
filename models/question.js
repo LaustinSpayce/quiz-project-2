@@ -8,6 +8,7 @@ const ROUND_TIMER = 10000 // 10 seconds.
 module.exports = (dbPoolInstance) => {
   // `dbPoolInstance` is accessible within this function scope
 
+  // retrieve the question name and answers
   const getQuestion = (questionNumber, callback) => {
     const queryString = 'SELECT * FROM question WHERE id=$1;'
     const queryValues = [questionNumber]
@@ -32,26 +33,32 @@ module.exports = (dbPoolInstance) => {
     console.log('Question stops receiving answers in ' + ROUND_TIMER)
   }
 
+  // Submitting an answer to the database
   const submitAnswer = (answerNumber, playerNo, callback) => {
     console.log('answer ' + answerNumber + ' submitted by player ' + playerNo)
     // Check currently active question.
     // playerNo. is only active in one game, so check the active_question of
     // the game the player is in.
-
     const checkActiveGameCallback = (error, result) => {
       if (error) {
         console.log('error', error)
       } else {
-        console.log('reported game number:')
-        console.log(result)
-        const gameNo = result.game_id
-        commitAnswerToTable(gameNo, playerNo, answerNumber, callback)
+        if (result === null) {
+          console.log('This players should not exist')
+          callback(error, 'Could not find this player, change this to redirect the player to start the game again')
+        } else {
+          console.log('reported game number:')
+          console.log(result)
+          const gameNo = result.game_id
+          commitAnswerToTable(gameNo, playerNo, answerNumber, callback)
+        }
       }
     }
     // check if playerNo. QuestionNo. is in database.
     checkActiveGameForPlayer(playerNo, checkActiveGameCallback)
   }
 
+  // Is what is the game ID for the player submitting the answer?
   const checkActiveGameForPlayer = (playerNo, callback) => {
     const queryString = 'SELECT game_id FROM player WHERE id=$1;'
     const queryValues = [playerNo]
@@ -69,6 +76,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Check if the answer has already been submitted, if not, then we write the player's answer to the db
   const commitAnswerToTable = (gameID, playerID, answerNo, callback) => {
     retrieveCurrentlyActiveQuestion(gameID, (error, queryResult) => {
       if (error) {
@@ -100,6 +108,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Checking an answer already submitted. Returns the value of what the player submitted.
   const checkAnswerAlreadySubmitted = (gameQuestionsId, playerID, callback) => {
     const queryString = 'SELECT * FROM game_player_questions WHERE game_questions_id=$1 AND player_id=$2;'
     const queryValues = [gameQuestionsId, playerID]
@@ -128,6 +137,8 @@ module.exports = (dbPoolInstance) => {
     console.log('What happens when the timer runs out')
   }
 
+  // Ping the game database to see what the curently active question is (0 means no active question)
+  // Must feed back enums on top of this 0, so that it can be a score screen, or game yet to begin etc.
   const retrieveCurrentlyActiveQuestion = (gameID, callback) => {
     const queryString = 'SELECT active_question FROM game WHERE id=$1;'
     const queryValues = [gameID]
