@@ -42,4 +42,6 @@ module.exports = (app, allModels) => {
 
   // Pinged every second to update the game.
   app.get('/game/:id/controller', gameControllerCallbacks.clientGameController)
+  app.get('/game/:id/nextround', gameControllerCallbacks.advanceGameState)
+  app.get('/game/:id/restart', gameControllerCallbacks.restartGame)
 }

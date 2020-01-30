@@ -9,12 +9,22 @@
 module.exports = (dbPoolInstance) => {
   // `dbPoolInstance` is accessible within this function scope
 
-  const getPlayerID = (token, callback) => {
+  const getPlayerID = async (token, callback) => {
     // Actually replace this with a query
-    callback(null, [{
+    const result = [{
       id: 1,
       game_id: 1
-    }])
+    }]
+    console.log(result)
+    if (callback) {
+      console.log('calling back')
+      callback(null, result)
+    } else {
+      return (null, [{
+        id: 1,
+        game_id: 1
+      }])
+    }
   }
 
   const addPlayerToGame = (playID, gameID, callback) => {

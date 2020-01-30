@@ -1,7 +1,7 @@
 const GAME_STATE = require('../public/gamestate')
 
 const ROUND_TIMER = 10000
-const BETWEEN_ROUNDS = 5000
+// const BETWEEN_ROUNDS = 5000
 
 /**
  * ===========================================
@@ -35,7 +35,7 @@ module.exports = (dbPoolInstance) => {
       if (error) {
         console.log(error)
       } else {
-        const nextRound = setTimeout(betweenRounds, ROUND_TIMER)
+        setTimeout(betweenRounds, ROUND_TIMER)
       }
     })
   }

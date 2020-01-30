@@ -121,8 +121,21 @@ module.exports = (db) => {
   }
 
   const beginGame = (request, response) => {
-    
-    db.game.beginGame(callback)
+    console.log('beginning again')
+  }
+
+  const advanceGameState = async (request, response) => {
+    console.log('debug advance game state game hit')
+    const token = request.cookies.playerToken
+    const result = await db.player.getPlayerID(token)
+    console.log(result)
+    const replydata = { message: 'Game state advanced!' }
+    const responseJSON = JSON.stringify(replydata)
+    response.send(responseJSON)
+  }
+
+  const restartGame = async (request, response) => {
+    console.log('debug restart game hit')
   }
 
   /**
@@ -135,6 +148,9 @@ module.exports = (db) => {
     play: playGameController,
     clientGameController: clientGameController,
     addNewPlayer: addNewPlayer,
-    startSession: startSession
+    startSession: startSession,
+    advanceGameState: advanceGameState,
+    restartGame: restartGame,
+    beginGame: beginGame
   }
 }

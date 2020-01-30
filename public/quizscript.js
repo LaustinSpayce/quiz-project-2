@@ -40,6 +40,7 @@ const mainContentResponseHandler = function() {
   if (data.gameState !== clientGameState) {
     clientGameState = data.gameState
     console.log('change!')
+    console.log(data.gameState)
     switch (data.gameState) {
       case GAME_STATE.STARTING:
         console.log('game now starting!')
@@ -64,9 +65,10 @@ const mainContentResponseHandler = function() {
 const advanceGameState = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', mainContentResponseHandler)
-  request.open('GET', '/game/1/controller')
+  request.open('GET', '/game/1/nextround')
   request.send()
 }
+advanceGameStateButton.addEventListener('click', advanceGameState)
 
 const updateCurrentGameState = function() {
   const request = new XMLHttpRequest()
