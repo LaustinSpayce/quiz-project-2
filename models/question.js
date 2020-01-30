@@ -27,6 +27,7 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  // Should this be in the game timer?
   const startQuestionTimer = () => {
     console.log('Question stops receiving answers in ' + ROUND_TIMER)
   }
@@ -43,7 +44,8 @@ module.exports = (dbPoolInstance) => {
       } else {
         console.log('reported game number:')
         console.log(result)
-        commitAnswerToTable(result, playerNo, answerNumber, callback)
+        const gameNo = result.game_id
+        commitAnswerToTable(gameNo, playerNo, answerNumber, callback)
       }
     }
     // check if playerNo. QuestionNo. is in database.
@@ -68,26 +70,102 @@ module.exports = (dbPoolInstance) => {
   }
 
   const commitAnswerToTable = (gameID, playerID, answerNo, callback) => {
-    let questionNo = 0
-    game.retrieveCurrentlyActiveQuestion(gameID, (error, queryResult) => {
+    retrieveCurrentlyActiveQuestion(gameID, (error, queryResult) => {
       if (error) {
         console.log('error!', error)
       } else {
-        questionNo = queryResult
-        console.log('in commit Answer ' + questionNo)
-        callback(null, questionNo)
+        answerNo = parseAnswerID(answerNo)
+        const gameQuestionsId = queryResult.id
+        checkAnswerAlreadySubmitted(gameQuestionsId, playerID, (error, result) => {
+          if (error) {
+            console.log('handle the error')
+          } else {
+            if (result === null) {
+              const queryString = 'INSERT INTO game_player_questions (player_id, game_questions_id, player_answer) VALUES ($1, $2, $3) RETURNING *'
+              const queryValues = [playerID, gameQuestionsId, answerNo]
+              dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+                if (error) {
+                  console.log('error', error)
+                } else {
+                  callback(null, queryResult.rows[0])
+                }
+              })
+            } else {
+              console.log('answer already submitted!')
+              callback(null, 'answer already submitted')
+            }
+          }
+        })
       }
     })
+  }
+
+  const checkAnswerAlreadySubmitted = (gameQuestionsId, playerID, callback) => {
+    const queryString = 'SELECT * FROM game_player_questions WHERE game_questions_id=$1 AND player_id=$2;'
+    const queryValues = [gameQuestionsId, playerID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        console.log('error')
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length > 0) {
+          callback(null, queryResult.rows)
+        } else {
+          callback(null, null)
+        }
+      }
+    })
+  }
+
+  // split answerNo. from a string to an intof 1-4
+  const parseAnswerID = (answerNo) => {
+    let answerNumber = answerNo.split('_')[1]
+    answerNumber = parseInt(answerNumber)
+    return answerNumber
   }
 
   const answerResults = () => {
     console.log('What happens when the timer runs out')
   }
 
+  const retrieveCurrentlyActiveQuestion = (gameID, callback) => {
+    const queryString = 'SELECT active_question FROM game WHERE id=$1;'
+    const queryValues = [gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        console.log('error!')
+        console.log(error)
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length === 1) {
+          const activeQuestion = queryResult.rows[0].active_question
+          const secondQuery = 'SELECT * FROM game_questions WHERE game_id=$1 AND question_id=$2'
+          const secondQueryValues = [gameID, activeQuestion]
+          dbPoolInstance.query(secondQuery, secondQueryValues, (secondError, secondQueryResults) => {
+            if (error) {
+              console.log(error)
+            } else {
+              if (secondQueryValues.length > 0) {
+                console.log('game_questions')
+                console.log(secondQueryResults.rows)
+                callback(null, secondQueryResults.rows[0])
+              } else {
+                callback(null, null)
+              }
+            }
+          })
+        } else {
+          console.log('did not get anything')
+        }
+      }
+    })
+  }
+
   return {
     getQuestion: getQuestion,
     submitAnswer: submitAnswer,
     startQuestionTimer: startQuestionTimer,
-    answerResults: answerResults
+    answerResults: answerResults,
+    retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion
   }
 }
