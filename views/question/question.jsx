@@ -1,5 +1,5 @@
 const React = require('react')
-const DefaultLayout = require('../layouts/defaultlayout')
+// const DefaultLayout = require('../layouts/defaultlayout')
 
 class question extends React.Component {
   render () {

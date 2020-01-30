@@ -13,16 +13,22 @@ let clientGameState = GAME_STATE.NONE
 
 const mainContentResponseHandler = function() {
   console.log(this.responseText)
+  mainContentDisplay.innerHTML = this.responseText
+  const data = JSON.parse(this.responseText)
+  console.log(data)
+  if (data.gameState !== clientGameState) {
+    console.log('change!')
+  }
 }
 
 const updateCurrentGameState = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', mainContentResponseHandler)
-  request.open('GET', '.')
+  request.open('GET', '/game/1/controller')
   request.send()
 }
 
-let pingTheServer = setInterval(updateCurrentGameState, 250)
+let pingTheServer = setInterval(updateCurrentGameState, 1000)
 
 // const answerItems = document.querySelectorAll('.answer')
 // let questionID = 1
