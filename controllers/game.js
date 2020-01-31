@@ -184,6 +184,8 @@ module.exports = (db) => {
         response.send('error')
       } else {
         const scoresArray = []
+        console.log('scores')
+        console.log(queryResult)
         for (const player of queryResult) {
           scoresArray.push({
             name: player.name,
@@ -192,6 +194,8 @@ module.exports = (db) => {
         }
         scoresArray.sort((a, b) => { return (b.score - a.score) })
         const data = { scores: scoresArray }
+        console.log('data:')
+        console.log(data)
         response.render('components/scores', data)
       }
     }
