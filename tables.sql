@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS player (
   id SERIAL PRIMARY KEY,
   name TEXT,
   token TEXT,
-  game_id INT
+  game_id INT,
+  score INT
 );
 
 CREATE TABLE IF NOT EXISTS game (
