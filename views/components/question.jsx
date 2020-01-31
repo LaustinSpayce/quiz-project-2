@@ -2,6 +2,11 @@ const React = require('react')
 // const DefaultLayout = require('../layouts/defaultlayout')
 
 class question extends React.Component {
+
+  // create an array with the 4 answers
+  // shuffle the array
+  // Display it below
+  
   render () {
     return (
       <div>

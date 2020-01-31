@@ -183,7 +183,9 @@ module.exports = (db) => {
         console.log('error')
         response.send('error')
       } else {
-
+        console.log('sending out scores')
+        // const scoreData = queryResult
+        response.render('components/scores')
       }
     }
     db.game.getScores(gameID, displayScoresCallback)

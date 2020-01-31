@@ -37,9 +37,12 @@ const showQuestion = function() {
 const showScores = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
+
     mainContentDisplay.innerHTML = this.responseText
-    answerItems = document.querySelectorAll('.answer')
   })
+  const getURL = '/game/' + questionNo + '/scores'
+  request.open('GET', getURL)
+  request.send()
 }
 
 const mainContentResponseHandler = function() {

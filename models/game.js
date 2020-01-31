@@ -338,6 +338,7 @@ module.exports = (dbPoolInstance) => {
         players = queryResult
         console.log('players')
         console.log(players)
+        controllerCallback(null, null)
       }
     }
     getPlayers(gameID, getPlayersCallback)
