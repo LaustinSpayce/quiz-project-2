@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS player (
   name TEXT,
   token TEXT,
   game_id INT,
-  score INT
+  score INT DEFAULT 0,
+  last_question_answered_id INT DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS game (
@@ -29,11 +30,4 @@ CREATE TABLE IF NOT EXISTS game_questions (
   question_id INT,
   game_id INT,
   ordering INT
-);
-
-CREATE TABLE IF NOT EXISTS game_player_questions (
-  id SERIAL PRIMARY KEY,
-  player_id INT,
-  game_questions_id INT,
-  player_answer INT
 );

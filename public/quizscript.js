@@ -117,9 +117,13 @@ const responseHandler = function () {
 
 // When you click the answer it is sent to the server.
 const onAnswerClick = function(event) {
+  console.log('clicky click click ' + event.target.id)
   if (questionAnswered) return
   const answerID = event.target.id
-  const data = { answerID: answerID }
+  const data = {
+    answerID: answerID,
+    questionNo: questionNo
+   }
   const request = new XMLHttpRequest()
   request.addEventListener('load', responseHandler)
   questionAnswered = true

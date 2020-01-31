@@ -101,7 +101,8 @@ module.exports = (dbPoolInstance) => {
     // Actually replace this with a query
     const result = [{
       id: 1,
-      game_id: 1
+      game_id: 1,
+      score: 0
     }]
     callback(null, result)
   }
@@ -135,6 +136,24 @@ module.exports = (dbPoolInstance) => {
     console.log('Question stops receiving answers in ' + ROUND_TIMER)
   }
 
+  // Is what is the game ID for the player submitting the answer?
+  const checkActiveGameForPlayer = (playerNo, callback) => {
+    const queryString = 'SELECT game_id FROM player WHERE id=$1;'
+    const queryValues = [playerNo]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length > 0) {
+          console.log()
+          callback(null, queryResult.rows[0])
+        } else {
+          callback(null, null)
+        }
+      }
+    })
+  }
+
   // Submitting an answer to the database
   const submitAnswer = (answerNumber, playerNo, callback) => {
     console.log('answer ' + answerNumber + ' submitted by player ' + playerNo)
@@ -158,24 +177,6 @@ module.exports = (dbPoolInstance) => {
     }
     // check if playerNo. QuestionNo. is in database.
     checkActiveGameForPlayer(playerNo, checkActiveGameCallback)
-  }
-
-  // Is what is the game ID for the player submitting the answer?
-  const checkActiveGameForPlayer = (playerNo, callback) => {
-    const queryString = 'SELECT game_id FROM player WHERE id=$1;'
-    const queryValues = [playerNo]
-    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
-      if (error) {
-        callback(error, null)
-      } else {
-        if (queryResult.rows.length > 0) {
-          console.log()
-          callback(null, queryResult.rows[0])
-        } else {
-          callback(null, null)
-        }
-      }
-    })
   }
 
   // Check if the answer has already been submitted, if not, then we write the player's answer to the db
@@ -383,6 +384,33 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const playerSubmitAnswer = (questionID, answerID, token, callback) => {
+    let playerID = 0
+    let playerScore = 0
+
+    const afterSubmitAnswer = (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+        return
+      }
+      console.log('committed answer to table')
+      console.log(queryResult)
+      callback(null, queryResult)
+    }
+
+    const afterGetPlayerId = (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+        return
+      }
+      playerID = queryResult[0].id
+      playerScore = queryResult[0].score
+      submitAnswer(answerID, playerID, afterSubmitAnswer)
+    }
+
+    getPlayerID(token, afterGetPlayerId)
+  }
+
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
@@ -398,6 +426,7 @@ module.exports = (dbPoolInstance) => {
     answerResults: answerResults,
     retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion,
     debugAdvancegameState: debugAdvancegameState,
-    getScores: getScores
+    getScores: getScores,
+    playerSubmitAnswer: playerSubmitAnswer
   }
 }

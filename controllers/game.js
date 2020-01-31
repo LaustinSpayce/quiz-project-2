@@ -199,30 +199,36 @@ module.exports = (db) => {
   }
 
   const submitAnswer = (request, response) => {
+    const questionID = request.params.id
     const answerID = request.body.answerID
     const token = 'aaaaa' // replace with actual cookie token.
-    db.game.getPlayerID(token, (error, result) => {
+    db.game.playerSubmitAnswer(questionID, answerID, token, (error, queryResult) => {
       if (error) {
-        console.log('error!', error)
+        response.send(error)
         return
       }
-      const playerNo = result[0].id
-      console.log('player number ' + playerNo)
-
-      // Send Data
-      const sendData = (error, result) => {
-        if (error) {
-          console.log('error!')
-          console.log(error)
-        } else {
-          const data = result
-          const myData = JSON.stringify(data)
-          console.log(myData)
-          response.send(myData)
-        }
-      }
-      db.game.submitAnswer(answerID, playerNo, sendData)
+      console.log('query result')
     })
+    // db.game.getPlayerID(token, (error, result) => {
+    //   if (error) {
+    //     console.log('error!', error)
+    //     return
+    //   }
+    //   const playerNo = result[0].id
+    //   // Send Data
+    //   const sendData = (error, result) => {
+    //     if (error) {
+    //       console.log('error!')
+    //       console.log(error)
+    //     } else {
+    //       const data = result
+    //       const myData = JSON.stringify(data)
+    //       console.log(myData)
+    //       response.send(myData)
+    //     }
+    //   }
+    //   db.game.submitAnswer(answerID, playerNo, sendData)
+    // })
   }
 
   /**
