@@ -48,10 +48,10 @@ INSERT INTO question
 VALUES
 ('10 - A is the correct answer', 'A', 'B', 'C', 'D');
 
-INSERT INTO player
-(name, token, game_id)
-VALUES
-('testPlayer', 'aaaaa', 1);
+-- INSERT INTO player
+-- (name, token, game_id)
+-- VALUES
+-- ('testPlayer', 'aaaaa', 1);
 
 INSERT INTO game
 (name, number_of_questions, active_question, invite_password, game_state)
