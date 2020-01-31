@@ -78,6 +78,7 @@ module.exports = (db) => {
         return
       }
       const questionNo = queryResult.active_question
+      console.log('Question No: ' + questionNo)
       const gameState = queryResult.game_state
       const data = {
         gameState: gameState,

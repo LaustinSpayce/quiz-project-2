@@ -304,13 +304,17 @@ module.exports = (dbPoolInstance) => {
       console.log(queryResponse)
       gameState = queryResponse.game_state
       activeQuestion = queryResponse.active_question
+      activeQuestion = parseInt(activeQuestion)
       // Possibly refactor to include switch.
       if (gameState === GAME_STATE.QUESTION) {
         setBetweenRounds(gameID, afterNewQuestion)
       } else if (gameState === GAME_STATE.BETWEENROUNDS) {
-        setActiveQuestion(gameID, activeQuestion++, afterNewQuestion)
+        activeQuestion++
+        setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
       } else if (gameState === null) {
         setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
+      } else if (gameState === GAME_STATE.STARTING) {
+        setActiveQuestion(gameID, 1, afterNewQuestion)
       }
     }
 

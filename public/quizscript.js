@@ -49,6 +49,7 @@ const mainContentResponseHandler = function() {
   // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
   questionNo = data.questionNo
+  // console.log(questionNo)
   // console.log(data)
   if (data.gameState !== clientGameState) {
     clientGameState = data.gameState
