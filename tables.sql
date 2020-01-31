@@ -25,9 +25,9 @@ CREATE TABLE IF NOT EXISTS question (
   answer_4 TEXT
 );
 
-CREATE TABLE IF NOT EXISTS game_questions (
-  id SERIAL PRIMARY KEY,
-  question_id INT,
-  game_id INT,
-  ordering INT
-);
+-- CREATE TABLE IF NOT EXISTS game_questions (
+--   id SERIAL PRIMARY KEY,
+--   question_id INT,
+--   game_id INT,
+--   ordering INT
+-- );
