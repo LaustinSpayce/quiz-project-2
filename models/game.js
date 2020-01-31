@@ -6,6 +6,8 @@ const GAME_STATE = {
   NONE: 'none' // No game state
 }
 
+const sha256 = require('js-sha256')
+
 const ROUND_TIMER = 10000
 // const BETWEEN_ROUNDS = 5000
 
@@ -332,6 +334,23 @@ module.exports = (dbPoolInstance) => {
     getPlayerID(token, afterGetPlayerId)
   }
 
+  const playerRegistration = (gameID, playerName, callback) => {
+    const queryString = 'INSERT INTO player (name, token, game_id) VALUES ($1, $2, $3) RETURNING *;'
+    const token = generateToken()
+    const queryValues = [playerName, token, gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult.rows[0])
+      }
+    })
+  }
+
+  const generateToken = () => {
+    return sha256((Math.random() * 1000).toString())
+  }
+
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
@@ -348,6 +367,7 @@ module.exports = (dbPoolInstance) => {
     retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion,
     advanceGameState: advanceGameState,
     getScores: getScores,
-    playerSubmitAnswer: playerSubmitAnswer
+    playerSubmitAnswer: playerSubmitAnswer,
+    playerRegistration: playerRegistration
   }
 }

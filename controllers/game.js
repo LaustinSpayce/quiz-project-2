@@ -107,23 +107,23 @@ module.exports = (db) => {
 
   const startSession = (request, response) => {
     // authenticate the user first
-    const playerToken = 'aaaaa'
-    db.game.getPlayerID(playerToken, (error, queryResult) => {
-      console.log(queryResult)
-      if (error) {
-        console.log('error', error)
-      } else {
-        if (queryResult.length > 0) {
-          console.log(queryResult[0].game_id)
-          console.log(request.params.id)
-          if (queryResult[0].game_id.toString() === request.params.id) {
-            console.log('letting cookie go')
-            response.cookie('playerToken', playerToken)
-            response.render('game/game')
-          }
-        }
-      }
-    })
+    // const playerToken = request.cookies.playerToken
+    // db.game.getPlayerID(playerToken, (error, queryResult) => {
+    //   if (error) {
+    //     console.log('error', error)
+    //   } else {
+    //     if (queryResult != null) {
+    //       console.log(queryResult[0].game_id)
+    //       console.log(request.params.id)
+    //       if (queryResult[0].game_id.toString() === request.params.id) {
+    //         response.cookie('playerToken', playerToken)
+    //         response.render('game/game')
+    //       }
+    //     } else {
+          response.render('game/game')
+      //   }
+      // }
+    // })
   }
 
   const beginGame = (request, response) => {
@@ -131,7 +131,7 @@ module.exports = (db) => {
   }
 
   const advanceGameState = (request, response) => {
-    const token = request.cookies.playerToken
+    const playerToken = request.cookies.playerToken
 
     const responseToViewController = (error, queryResult) => {
       if (error) {
@@ -141,7 +141,7 @@ module.exports = (db) => {
       }
     }
 
-    db.game.advanceGameState(token, responseToViewController)
+    db.game.advanceGameState(playerToken, responseToViewController)
   }
 
   const restartGame = (request, response) => {
@@ -201,8 +201,8 @@ module.exports = (db) => {
   const submitAnswer = (request, response) => {
     const questionID = request.params.id
     const answerID = request.body.answerID
-    const token = 'aaaaa' // replace with actual cookie token.
-    db.game.playerSubmitAnswer(questionID, answerID, token, (error, queryResult) => {
+    const playerToken = request.cookie.playerToken
+    db.game.playerSubmitAnswer(questionID, answerID, playerToken, (error, queryResult) => {
       if (error) {
         response.send(error)
       } else {
@@ -210,6 +210,51 @@ module.exports = (db) => {
         response.send(data)
       }
     })
+  }
+
+  const registerGame = (request, response) => {
+    const playerToken = request.cookies.playerToken
+    const gameID = parseInt(request.params.id)
+    let activePlayerGame = 0
+    const resultFromPlayerAuth = (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        if (queryResult) {
+          activePlayerGame = queryResult[0].game_id
+        }
+        // if there is a valid playerToken
+        if (playerToken) {
+          if (gameID === activePlayerGame) {
+            const data = { name: queryResult[0].name }
+            response.render('components/pleasewait', data)
+            return
+          }
+        }
+        // if no valid token, clear
+        response.clearCookie('playerToken')
+        response.render('components/playername')
+      }
+    }
+    db.game.getPlayerID(playerToken, resultFromPlayerAuth)
+  }
+
+  const playerRegistration = (request, response) => {
+    const gameID = request.params.id
+    const inputName = request.body.name
+
+    const afterRegistration = (error, queryCallback) => {
+      if (error) {
+        response.send('error')
+      } else {
+        console.log(queryCallback)
+        const playerToken = queryCallback.token
+        response.cookie('playerToken', playerToken)
+        response.render('game/game')
+      }
+    }
+
+    db.game.playerRegistration(gameID, inputName, afterRegistration)
   }
 
   /**
@@ -227,6 +272,8 @@ module.exports = (db) => {
     beginGame: beginGame,
     displayQuestion: displayQuestion,
     submitAnswer: submitAnswer,
-    displayScores: displayScores
+    displayScores: displayScores,
+    registerGame: registerGame,
+    playerRegistration: playerRegistration
   }
 }

@@ -47,6 +47,16 @@ const showScores = function() {
   request.send()
 }
 
+const gameStarting = function() {
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', function() {
+    mainContentDisplay.innerHTML = this.responseText
+  })
+  const getURL = '/game/'+ gameID + '/start'
+  request.open('GET', getURL)
+  request.send()
+}
+
 // Response Handler for the every 0.25 second ping to the server
 const mainContentResponseHandler = function() {
   // console.log(this.responseText)
@@ -61,6 +71,7 @@ const mainContentResponseHandler = function() {
     switch (data.gameState) {
       case GAME_STATE.STARTING:
         console.log('game now starting!')
+        gameStarting()
         break
       case GAME_STATE.QUESTION:
         console.log('now showing the question')
