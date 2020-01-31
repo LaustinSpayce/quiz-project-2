@@ -1,4 +1,10 @@
-const GAME_STATE = require('../public/gamestate')
+const GAME_STATE = {
+  STARTING: 'starting', // Allow new players to sign up
+  QUESTION: 'question', // Question posed, allow answers
+  BETWEENROUNDS: 'betweenRounds', // Between questions
+  GAMEOVER: 'gameOver', // Game fnished.
+  NONE: 'none' // No game state
+}
 
 const ROUND_TIMER = 10000
 // const BETWEEN_ROUNDS = 5000
@@ -18,7 +24,7 @@ module.exports = (dbPoolInstance) => {
       if (error) {
         console.log(error)
       } else {
-        setTimeout(betweenRounds, ROUND_TIMER)
+        setTimeout(setBetweenRounds, ROUND_TIMER)
       }
     })
   }
@@ -29,21 +35,18 @@ module.exports = (dbPoolInstance) => {
     const queryValues = [questionID, GAME_STATE.QUESTION, gameID]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
+        console.log('error in setActiveQuestion')
         callback(error, null)
       } else {
+        console.log(queryResult)
         callback(null, queryResult)
       }
     })
   }
 
-  // Move forward to the next question
-  const nextRound = () => {
-    console.log('Onward to the next question!')
-  }
-
   // Go from being in a question to between rounds. (Show the scores)
-  const betweenRounds = (gameID, callback) => {
-    const queryString = 'UPDATE game SET active_question = 0, game_state = $1 WHERE id = $3 RETURNING *;'
+  const setBetweenRounds = (gameID, callback) => {
+    const queryString = 'UPDATE game SET game_state = $1 WHERE id = $2 RETURNING *;'
     const queryValues = [GAME_STATE.BETWEENROUNDS, gameID]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
@@ -100,7 +103,6 @@ module.exports = (dbPoolInstance) => {
       id: 1,
       game_id: 1
     }]
-    console.log('calling back')
     callback(null, result)
   }
 
@@ -141,7 +143,7 @@ module.exports = (dbPoolInstance) => {
     // the game the player is in.
     const checkActiveGameCallback = (error, result) => {
       if (error) {
-        console.log('error', error)
+        console.log('error in checkActiveGameCallback', error)
       } else {
         if (result === null) {
           console.log('This players should not exist')
@@ -193,7 +195,7 @@ module.exports = (dbPoolInstance) => {
               const queryValues = [playerID, gameQuestionsId, answerNo]
               dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
                 if (error) {
-                  console.log('error', error)
+                  console.log('Error in committing answer to table', error)
                 } else {
                   callback(null, queryResult.rows[0])
                 }
@@ -214,7 +216,7 @@ module.exports = (dbPoolInstance) => {
     const queryValues = [gameQuestionsId, playerID]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
-        console.log('error')
+        console.log('error in checking answer already submitted', error)
         callback(error, null)
       } else {
         if (queryResult.rows.length > 0) {
@@ -277,13 +279,92 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const debugAdvancegameState = (playerToken, controllerCallback) => {
+    let gameID = 0
+    let gameState = null
+    let activeQuestion = 0
+
+    // Repond to the controller
+    const afterNewQuestion = (error, queryResponse) => {
+      if (error) {
+        console.log('error in afterNewQuestion', error)
+      } else {
+        console.log(queryResponse)
+        controllerCallback(null, queryResponse)
+      }
+    }
+
+    // If the game is in a question, go to the score.
+    // If in the scores, go to the question.
+    const gameStateCallback = (error, queryResponse) => {
+      if (error) {
+        console.log('error in gameStateCallback', error)
+        return
+      }
+      console.log(queryResponse)
+      gameState = queryResponse.game_state
+      activeQuestion = queryResponse.active_question
+      // Possibly refactor to include switch.
+      if (gameState === GAME_STATE.QUESTION) {
+        setBetweenRounds(gameID, afterNewQuestion)
+      } else if (gameState === GAME_STATE.BETWEENROUNDS) {
+        setActiveQuestion(gameID, activeQuestion++, afterNewQuestion)
+      } else if (gameState === null) {
+        setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
+      }
+    }
+
+    const checkGameStateCallback = (error, queryResponse) => {
+      if (error) {
+        console.log(error)
+      } else {
+        gameID = queryResponse[0].game_id
+        // What is the current game state for this game?
+        currentGameState(gameID, gameStateCallback)
+      }
+    }
+    // First check the player is allowed to advance the game state.
+    getPlayerID(playerToken, checkGameStateCallback)
+    // Then we
+  }
+
+  const getScores = (gameID, controllerCallback) => {
+    let players = []
+
+    const getPlayersCallback = (error, queryResult) => {
+      if (error) {
+        controllerCallback(error)
+      } else {
+        players = queryResult
+        console.log('players')
+        console.log(players)
+      }
+    }
+    getPlayers(gameID, getPlayersCallback)
+  }
+
+  const getPlayers = (gameID, callback) => {
+    const queryString = 'SELECT * FROM player WHERE game_id = $1;'
+    const queryValues = [gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        if (queryResult.rows.length > 0) {
+          callback(null, queryResult.rows)
+        } else {
+          callback(null, null)
+        }
+      }
+    })
+  }
+
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
     beginGame: beginGame,
-    nextRound: nextRound,
     endGame: endGame,
-    betweenRounds: betweenRounds,
+    setBetweenRounds: setBetweenRounds,
     currentGameState: currentGameState,
     checkGameIDAgainstPassword: checkGameIDAgainstPassword,
     getPlayerID: getPlayerID,
@@ -291,6 +372,8 @@ module.exports = (dbPoolInstance) => {
     submitAnswer: submitAnswer,
     startQuestionTimer: startQuestionTimer,
     answerResults: answerResults,
-    retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion
+    retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion,
+    debugAdvancegameState: debugAdvancegameState,
+    getScores: getScores
   }
 }

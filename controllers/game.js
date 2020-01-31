@@ -1,4 +1,10 @@
-const GAME_STATE = require('../public/gamestate')
+const GAME_STATE = {
+  STARTING: 'starting', // Allow new players to sign up
+  QUESTION: 'question', // Question posed, allow answers
+  BETWEENROUNDS: 'betweenRounds', // Between questions
+  GAMEOVER: 'gameOver', // Game fnished.
+  NONE: 'none' // No game state
+}
 
 module.exports = (db) => {
   /**
@@ -58,7 +64,6 @@ module.exports = (db) => {
     // parse input form.
     // >> Give the player a cookie
     // >>>> Assign the cookie to a player to the game ID.
-    // >>>>>> Prompt user for a name.
   }
 
   const clientGameController = (request, response) => {
@@ -66,19 +71,29 @@ module.exports = (db) => {
     // Do they have a player cookie?
     // >> Is the player cookie valid for this game?
     // >>>> If yes then jump right on into the game whatever the state is.
-    const onAuthorisation = (error, queryResult) => {
+
+    const checkGameStateCallback = (error, queryResult) => {
       if (error) {
         console.log('error')
         return
       }
-      const questionNo = queryResult.question_id
+      const questionNo = queryResult.active_question
+      const gameState = queryResult.game_state
       const data = {
-        gameState: GAME_STATE.QUESTION,
+        gameState: gameState,
         gameID: gameID,
         questionNo: questionNo
       }
       const mydata = JSON.stringify(data)
       response.send(mydata)
+    }
+
+    const onAuthorisation = (error, queryResult) => {
+      if (error) {
+        console.log('error')
+        return
+      }
+      db.game.currentGameState(gameID, checkGameStateCallback)
     }
 
     db.game.retrieveCurrentlyActiveQuestion(gameID, onAuthorisation)
@@ -118,38 +133,15 @@ module.exports = (db) => {
     console.log('debug advance game state game hit')
     const token = request.cookies.playerToken
 
-    const fetchedCurrentGameState = (error, queryResult) => {
+    const responseToViewController = (error, queryResult) => {
       if (error) {
         console.log(error)
-        return
-      }
-      console.log(queryResult)
-      const currentGameState = queryResult.game_state
-      console.log('current game state :' + currentGameState)
-      const replydata = {
-        message: 'Game state advanced!',
-        gameState: currentGameState
-      }
-      const responseJSON = JSON.stringify(replydata)
-      response.send(responseJSON)
-    }
-
-    const moveToNextStage = (error, queryResult) => {
-      if (error) {
-        console.log('error', error)
-        return
-      }
-      console.log('query Result')
-      console.log(queryResult)
-      const playerIDResult = queryResult[0]
-      const gameID = playerIDResult.game_id.toString()
-      console.log(gameID)
-      if (gameID === request.params.id) {
-        db.game.currentGameState(gameID, fetchedCurrentGameState)
+      } else {
+        response.send('Successfully advanced')
       }
     }
 
-    db.game.getPlayerID(token, moveToNextStage)
+    db.game.debugAdvancegameState(token, responseToViewController)
   }
 
   const restartGame = (request, response) => {
@@ -179,8 +171,22 @@ module.exports = (db) => {
         gameState: GAME_STATE.QUESTION
       }
 
-      response.render('question/question', data)
+      response.render('components/question', data)
     })
+  }
+
+  const displayScores = (request, response) => {
+    const gameID = request.params.id
+
+    const displayScoresCallback = (error, queryResult) => {
+      if (error) {
+        console.log('error')
+        response.send('error')
+      } else {
+
+      }
+    }
+    db.game.getScores(gameID, displayScoresCallback)
   }
 
   const submitAnswer = (request, response) => {
@@ -193,6 +199,8 @@ module.exports = (db) => {
       }
       const playerNo = result[0].id
       console.log('player number ' + playerNo)
+
+      // Send Data
       const sendData = (error, result) => {
         if (error) {
           console.log('error!')
@@ -222,6 +230,7 @@ module.exports = (db) => {
     restartGame: restartGame,
     beginGame: beginGame,
     displayQuestion: displayQuestion,
-    submitAnswer: submitAnswer
+    submitAnswer: submitAnswer,
+    displayScores: displayScores
   }
 }

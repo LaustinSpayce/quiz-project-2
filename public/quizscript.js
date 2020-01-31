@@ -16,6 +16,7 @@ let clientGameState = GAME_STATE.NONE
 let answerItems = []
 let questionAnswered = false
 let questionNo = 0
+let gameID = 1 // change this later
 
 const showQuestion = function() {
   const request = new XMLHttpRequest()
@@ -28,12 +29,21 @@ const showQuestion = function() {
       answerItem.addEventListener('click', onAnswerClick)
     }
   })
-  request.open('GET', '/question/1')
+  const getURL = '/question/' + questionNo
+  request.open('GET', getURL)
   request.send()
 }
 
+const showScores = function() {
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', function() {
+    mainContentDisplay.innerHTML = this.responseText
+    answerItems = document.querySelectorAll('.answer')
+  })
+}
+
 const mainContentResponseHandler = function() {
-  // console.log(this.responseText)
+  console.log(this.responseText)
   const data = JSON.parse(this.responseText)
   questionNo = data.questionNo
   // console.log(data)
@@ -46,10 +56,12 @@ const mainContentResponseHandler = function() {
         console.log('game now starting!')
         break
       case GAME_STATE.QUESTION:
+        console.log('now showing the question')
         showQuestion()
         break
       case GAME_STATE.BETWEENROUNDS:
-        console.log('Show us the scores George Dawes!')
+        console.log('now showing the scores')
+        showScores()
         break
       case GAME_STATE.GAMEOVER:
         console.log('Game over, final score')
@@ -62,18 +74,22 @@ const mainContentResponseHandler = function() {
   }
 }
 
+
 const advanceGameState = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', mainContentResponseHandler)
-  request.open('GET', '/game/1/nextround')
+  const url = '/game/' + gameID + '/nextround/'
+  request.open('GET', url)
   request.send()
 }
 advanceGameStateButton.addEventListener('click', advanceGameState)
 
+
 const updateCurrentGameState = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', mainContentResponseHandler)
-  request.open('GET', '/game/1/controller')
+  const url = '/game/' + gameID + '/controller'
+  request.open('GET', url)
   request.send()
 }
 
