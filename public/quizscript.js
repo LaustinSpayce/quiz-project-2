@@ -43,7 +43,7 @@ const showScores = function() {
 }
 
 const mainContentResponseHandler = function() {
-  console.log(this.responseText)
+  // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
   questionNo = data.questionNo
   // console.log(data)
