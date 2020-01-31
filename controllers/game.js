@@ -106,24 +106,7 @@ module.exports = (db) => {
   }
 
   const startSession = (request, response) => {
-    // authenticate the user first
-    // const playerToken = request.cookies.playerToken
-    // db.game.getPlayerID(playerToken, (error, queryResult) => {
-    //   if (error) {
-    //     console.log('error', error)
-    //   } else {
-    //     if (queryResult != null) {
-    //       console.log(queryResult[0].game_id)
-    //       console.log(request.params.id)
-    //       if (queryResult[0].game_id.toString() === request.params.id) {
-    //         response.cookie('playerToken', playerToken)
-    //         response.render('game/game')
-    //       }
-    //     } else {
-          response.render('game/game')
-      //   }
-      // }
-    // })
+    response.render('game/game')
   }
 
   const beginGame = (request, response) => {
@@ -201,7 +184,7 @@ module.exports = (db) => {
   const submitAnswer = (request, response) => {
     const questionID = request.params.id
     const answerID = request.body.answerID
-    const playerToken = request.cookie.playerToken
+    const playerToken = request.cookies.playerToken
     db.game.playerSubmitAnswer(questionID, answerID, playerToken, (error, queryResult) => {
       if (error) {
         response.send(error)
