@@ -231,15 +231,19 @@ module.exports = (dbPoolInstance) => {
       } else {
         let playerScore = queryResult.rows[0].score
         playerScore++
-        const queryStringTwo = 'UPDATE player SET score = $1 WHERE id=$2 RETURNING *;'
-        const queryValuesTwo = [playerScore, playerID]
-        dbPoolInstance.query(queryStringTwo, queryValuesTwo, (error, queryResultTwo) => {
-          if (error) {
-            callback(error, null)
-          } else {
-            callback(null, queryResultTwo.rows[0])
-          }
-        })
+        updatePlayerScore(playerID, playerScore, callback)
+      }
+    })
+  }
+
+  const updatePlayerScore = (playerID, playerScore, callback) => {
+    const queryString = 'UPDATE player SET score = $1 WHERE id=$2 RETURNING *;'
+    const queryValues = [playerScore, playerID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult.rows[0])
       }
     })
   }
@@ -363,22 +367,7 @@ module.exports = (dbPoolInstance) => {
     // Then we
   }
 
-  const getScores = (gameID, controllerCallback) => {
-    let players = []
-
-    const getPlayersCallback = (error, queryResult) => {
-      if (error) {
-        controllerCallback(error)
-      } else {
-        players = queryResult
-        console.log('players')
-        console.log(players)
-      }
-    }
-    getPlayers(gameID, getPlayersCallback)
-  }
-
-  const getPlayers = (gameID, callback) => {
+  const getScores = (gameID, callback) => {
     const queryString = 'SELECT * FROM player WHERE game_id = $1;'
     const queryValues = [gameID]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {

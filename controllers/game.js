@@ -183,9 +183,16 @@ module.exports = (db) => {
         console.log('error')
         response.send('error')
       } else {
-        console.log('sending out scores')
-        // const scoreData = queryResult
-        response.render('components/scores')
+        const scoresArray = []
+        for (const player of queryResult) {
+          scoresArray.push({
+            name: player.name,
+            score: player.score
+          })
+        }
+        scoresArray.sort((a, b) => { return (b.score - a.score) })
+        const data = { scores: scoresArray }
+        response.render('components/scores', data)
       }
     }
     db.game.getScores(gameID, displayScoresCallback)

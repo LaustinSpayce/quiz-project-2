@@ -18,6 +18,7 @@ let questionAnswered = false
 let questionNo = 0
 let gameID = 1 // change this later
 
+// AJAX Call to retrieve and display the question.
 const showQuestion = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
@@ -34,13 +35,14 @@ const showQuestion = function() {
   request.send()
 }
 
+// AJAX Call to retrieve and display the scores between rounds.
 const showScores = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
 
     mainContentDisplay.innerHTML = this.responseText
   })
-  const getURL = '/game/' + questionNo + '/scores'
+  const getURL = '/game/' + gameID + '/scores'
   request.open('GET', getURL)
   request.send()
 }
