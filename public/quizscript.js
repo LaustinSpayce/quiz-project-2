@@ -47,6 +47,7 @@ const showScores = function() {
   request.send()
 }
 
+// Response Handler for the every 0.25 second ping to the server
 const mainContentResponseHandler = function() {
   // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
@@ -80,10 +81,14 @@ const mainContentResponseHandler = function() {
   }
 }
 
+const gameStateResponseHandler = function() {
+  console.log('response received')
+}
 
+// Ask to advance the game state.
 const advanceGameState = function() {
   const request = new XMLHttpRequest()
-  request.addEventListener('load', mainContentResponseHandler)
+  request.addEventListener('load', gameStateResponseHandler)
   const url = '/game/' + gameID + '/nextround/'
   request.open('GET', url)
   request.send()
