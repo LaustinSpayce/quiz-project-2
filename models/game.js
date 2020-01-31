@@ -23,6 +23,7 @@ module.exports = (dbPoolInstance) => {
     setActiveQuestion(gameID, 1, (error, queryResult) => {
       if (error) {
         console.log(error)
+        callback(error, null)
       } else {
         setTimeout(setBetweenRounds, ROUND_TIMER)
       }
@@ -38,7 +39,6 @@ module.exports = (dbPoolInstance) => {
         console.log('error in setActiveQuestion')
         callback(error, null)
       } else {
-        console.log(queryResult)
         callback(null, queryResult)
       }
     })
@@ -58,8 +58,16 @@ module.exports = (dbPoolInstance) => {
   }
 
   // When we run out of questions this will show up.
-  const endGame = () => {
-    console.log('We have ran out of questions and so the game will end')
+  const endGame = (gameID, callback) => {
+    const queryString = 'UPDATE game SET game_state = $1 WHERE id = $2 RETURNING *;'
+    const queryValues = [GAME_STATE.GAMEOVER, gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, error)
+      }
+    })
   }
 
   // const send back what the current game state is.
@@ -207,8 +215,6 @@ module.exports = (dbPoolInstance) => {
     const queryValues = [gameID]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
-        console.log('error!')
-        console.log(error)
         callback(error, null)
       } else {
         callback(null, queryResult.rows[0])
@@ -217,7 +223,7 @@ module.exports = (dbPoolInstance) => {
   }
 
   // Press the button to skip to the next question
-  const debugAdvancegameState = (playerToken, controllerCallback) => {
+  const advanceGameState = (playerToken, controllerCallback) => {
     let gameID = 0
     let gameState = null
     let activeQuestion = 0
@@ -226,8 +232,8 @@ module.exports = (dbPoolInstance) => {
     const afterNewQuestion = (error, queryResponse) => {
       if (error) {
         console.log('error in afterNewQuestion', error)
+        controllerCallback(error, null)
       } else {
-        // console.log(queryResponse)
         controllerCallback(null, queryResponse)
       }
     }
@@ -237,9 +243,9 @@ module.exports = (dbPoolInstance) => {
     const gameStateCallback = (error, queryResponse) => {
       if (error) {
         console.log('error in gameStateCallback', error)
+        controllerCallback(error, null)
         return
       }
-      // console.log(queryResponse)
       gameState = queryResponse.game_state
       activeQuestion = queryResponse.active_question
       activeQuestion = parseInt(activeQuestion)
@@ -247,18 +253,25 @@ module.exports = (dbPoolInstance) => {
       if (gameState === GAME_STATE.QUESTION) {
         setBetweenRounds(gameID, afterNewQuestion)
       } else if (gameState === GAME_STATE.BETWEENROUNDS) {
+        const maxNumOfQuestions = queryResponse.number_of_questions
+        if (activeQuestion >= maxNumOfQuestions) {
+          endGame(gameID, afterNewQuestion)
+        }
         activeQuestion++
         setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
       } else if (gameState === null) {
         setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
       } else if (gameState === GAME_STATE.STARTING) {
         setActiveQuestion(gameID, 1, afterNewQuestion)
+      } else if (gameState === GAME_STATE.GAMEOVER) {
+        controllerCallback(null, 'Game Over')
       }
     }
 
     const checkGameStateCallback = (error, queryResponse) => {
       if (error) {
         console.log(error)
+        controllerCallback(error, null)
       } else {
         gameID = queryResponse[0].game_id
         // What is the current game state for this game?
@@ -297,25 +310,18 @@ module.exports = (dbPoolInstance) => {
         callback(error, null)
         return
       }
-      console.log('committed answer to table')
-      console.log(queryResult)
       callback(null, queryResult)
     }
 
     // Then we see if they answered the question already, if not then we submitAnswer.
     const afterGetPlayerId = (error, queryResult) => {
-      console.log('got player ID')
       if (error) {
         callback(error, null)
         return
       }
-      console.log(queryResult[0])
       playerID = queryResult[0].id
       lastQuestionAnswered = queryResult[0].last_question_answered_id
-      console.log('last question answered: ' + lastQuestionAnswered)
-      console.log('questionID: ' + questionID)
       if (lastQuestionAnswered < questionID) {
-        console.log('submitting answer')
         submitAnswer(answerID, playerID, questionID, afterSubmitAnswer)
       } else {
         callback(null, 'answer already submitted')
@@ -340,7 +346,7 @@ module.exports = (dbPoolInstance) => {
     startQuestionTimer: startQuestionTimer,
     answerResults: answerResults,
     retrieveCurrentlyActiveQuestion: retrieveCurrentlyActiveQuestion,
-    debugAdvancegameState: debugAdvancegameState,
+    advanceGameState: advanceGameState,
     getScores: getScores,
     playerSubmitAnswer: playerSubmitAnswer
   }

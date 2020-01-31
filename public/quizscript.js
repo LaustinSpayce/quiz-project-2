@@ -72,6 +72,7 @@ const mainContentResponseHandler = function() {
         break
       case GAME_STATE.GAMEOVER:
         console.log('Game over, final score')
+        showScores()
         break
       default:
         console.log('you should not be here')

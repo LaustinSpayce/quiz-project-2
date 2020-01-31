@@ -29,7 +29,6 @@ module.exports = (db) => {
       } else {
         if (queryResult.length > 0) {
           gameID = queryResult[0].game_id
-          console.log(queryResult)
           response.redirect('/game/' + gameID + '/play')
         } else {
           db.game.checkGameIDAgainstPassword(gameID, inviteID, (error, result) => {
@@ -75,6 +74,7 @@ module.exports = (db) => {
     const checkGameStateCallback = (error, queryResult) => {
       if (error) {
         console.log('error')
+        response.send(error)
         return
       }
       const questionNo = queryResult.active_question
@@ -91,6 +91,7 @@ module.exports = (db) => {
     const onAuthorisation = (error, queryResult) => {
       if (error) {
         console.log('error')
+        response.send(error)
         return
       }
       db.game.currentGameState(gameID, checkGameStateCallback)
@@ -130,7 +131,6 @@ module.exports = (db) => {
   }
 
   const advanceGameState = (request, response) => {
-    console.log('debug advance game state game hit')
     const token = request.cookies.playerToken
 
     const responseToViewController = (error, queryResult) => {
@@ -141,7 +141,7 @@ module.exports = (db) => {
       }
     }
 
-    db.game.debugAdvancegameState(token, responseToViewController)
+    db.game.advanceGameState(token, responseToViewController)
   }
 
   const restartGame = (request, response) => {
@@ -181,11 +181,9 @@ module.exports = (db) => {
     const displayScoresCallback = (error, queryResult) => {
       if (error) {
         console.log('error')
-        response.send('error')
+        response.send(error)
       } else {
         const scoresArray = []
-        console.log('scores')
-        console.log(queryResult)
         for (const player of queryResult) {
           scoresArray.push({
             name: player.name,
@@ -194,8 +192,6 @@ module.exports = (db) => {
         }
         scoresArray.sort((a, b) => { return (b.score - a.score) })
         const data = { scores: scoresArray }
-        console.log('data:')
-        console.log(data)
         response.render('components/scores', data)
       }
     }
@@ -209,9 +205,10 @@ module.exports = (db) => {
     db.game.playerSubmitAnswer(questionID, answerID, token, (error, queryResult) => {
       if (error) {
         response.send(error)
-        return
+      } else {
+        const data = JSON.stringify(queryResult)
+        response.send(data)
       }
-      console.log('query result')
     })
   }
 
