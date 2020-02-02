@@ -16,7 +16,7 @@ const url = require('url')
 var configs
 
 if (process.env.DATABASE_URL) {
-  const params = url.url(process.env.DATABASE_URL)
+  const params = url.URL(process.env.DATABASE_URL)
   const auth = params.auth.split(':')
 
   configs = {
