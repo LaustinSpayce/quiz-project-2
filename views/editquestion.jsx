@@ -13,6 +13,7 @@ class editQuestion extends React.Component {
               <input type='text' className='form-control' id='question' name='question' defaultValue={this.props.question} required/>
             </div>
             <div className="form-group">
+              // TODO: Finish this off.s
               <div className="col-md-6 bg-primary border rounded p-1">
             {answerArray[0]}
           </div>
