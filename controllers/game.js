@@ -47,16 +47,6 @@ module.exports = (db) => {
       }
     }
     db.game.getPlayerID(playerToken, afterGetPlayerId)
-    // redirect them to that.
-    // Check the game is accepting invites (GAME_STATE.STARTING)
-    // If yes, prompt for a name.
-
-    // const data = {
-    //   message: 'hello',
-    //   gameID: gameID,
-    //   inviteID: inviteID
-    // }
-    // response.render('game/game', data)
   }
 
   const addNewPlayer = (request, response) => {
@@ -240,6 +230,25 @@ module.exports = (db) => {
     db.game.playerRegistration(gameID, inputName, afterRegistration)
   }
 
+  const editQuestion = (request, response) => {
+    const questionID = request.params.id
+    db.game.getQuestion(questionID, (error, question) => {
+      if (error) {
+        response.send(error)
+      } else {
+        const data = {
+          question: question.question,
+          answer_1: question.answer_1,
+          answer_2: question.answer_2,
+          answer_3: question.answer_3,
+          answer_4: question.answer_4,
+          gameState: GAME_STATE.QUESTION
+        }
+        response.render('editquestion', data)
+      }
+    })
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -257,6 +266,7 @@ module.exports = (db) => {
     submitAnswer: submitAnswer,
     displayScores: displayScores,
     registerGame: registerGame,
-    playerRegistration: playerRegistration
+    playerRegistration: playerRegistration,
+    editQuestion: editQuestion
   }
 }
