@@ -7,6 +7,7 @@ const GAME_STATE = {
 }
 
 const sha256 = require('js-sha256')
+const ip = require('ip')
 
 const ROUND_TIMER = 10000
 // const BETWEEN_ROUNDS = 5000
@@ -111,6 +112,8 @@ module.exports = (dbPoolInstance) => {
     // Actually replace this with a query
     const queryString = 'SELECT * FROM player WHERE token=$1'
     const queryValues = [token]
+    const ipAddress = ip.address()
+    console.log(ipAddress)
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
         callback(error, null)
@@ -123,7 +126,7 @@ module.exports = (dbPoolInstance) => {
       }
     })
   }
-
+ 
   //
   // STUFF RELATED TO QUESTIONS
   //
