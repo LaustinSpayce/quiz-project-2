@@ -125,8 +125,7 @@ module.exports = (dbPoolInstance) => {
         }
       }
     })
-  }
- 
+  }  
   //
   // STUFF RELATED TO QUESTIONS
   //

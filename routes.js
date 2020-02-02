@@ -33,6 +33,7 @@ module.exports = (app, allModels) => {
   // Show - Show the specific question.
   app.get('/question/:id', gameControllerCallbacks.displayQuestion)
   app.post('/question/:id', gameControllerCallbacks.submitAnswer)
+  app.get('/question/:id/edit', gameControllerCallbacks.editQuestion)
 
   app.get('/game/:id/play', gameControllerCallbacks.startSession)
   app.post('/game/:id/play', gameControllerCallbacks.playerRegistration)
