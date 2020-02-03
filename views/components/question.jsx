@@ -1,4 +1,4 @@
-const React = require('react')
+ßconst React = require('react')
 // const DefaultLayout = require('../layouts/defaultlayout')
 
 class question extends React.Component {

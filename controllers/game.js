@@ -252,7 +252,6 @@ module.exports = (db) => {
   }
 
   const submitEditedQuestion = (request, response) => {
-    console.log(request.body)
     const questionData = {
       id: request.body.id,
       question: request.body.question,
@@ -265,10 +264,34 @@ module.exports = (db) => {
       if (error) {
         response.send(error)
       } else {
-        response.send('result!')
+        const message = 'Question id ' + questionData.id + ' has been updated'
+        db.game.listAllQuestions((error2, queryResult2) => {
+          if (error) {
+            response.send(error)
+          } else {
+            const data = {
+              questions: queryResult2,
+              message: message
+            }
+            response.render('questionsindex', data)
+          }
+        })
       }
     }
     db.game.editQuestion(questionData, afterEditedQuestionSubmission)
+  }
+
+  const displayAllQuestions = (request, response) => {
+    db.game.listAllQuestions((error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        const data = {
+          questions: queryResult
+        }
+        response.render('questionsindex', data)
+      }
+    })
   }
 
   /**
@@ -290,6 +313,7 @@ module.exports = (db) => {
     registerGame: registerGame,
     playerRegistration: playerRegistration,
     editQuestion: editQuestion,
-    submitEditedQuestion: submitEditedQuestion
+    submitEditedQuestion: submitEditedQuestion,
+    displayAllQuestions: displayAllQuestions
   }
 }

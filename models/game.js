@@ -365,6 +365,20 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const listAllQuestions = (callback) => {
+    const queryString = 'SELECT * FROM question;'
+    dbPoolInstance.query(queryString, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        // First sort the items by id.
+        const result = queryResult.rows
+        result.sort((a, b) => { return a.id - b.id })
+        callback(null, queryResult.rows)
+      }
+    })
+  }
+
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
@@ -383,6 +397,7 @@ module.exports = (dbPoolInstance) => {
     getScores: getScores,
     playerSubmitAnswer: playerSubmitAnswer,
     playerRegistration: playerRegistration,
-    editQuestion: editQuestion
+    editQuestion: editQuestion,
+    listAllQuestions: listAllQuestions
   }
 }
