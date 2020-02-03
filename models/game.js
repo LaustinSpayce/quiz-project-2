@@ -380,7 +380,27 @@ module.exports = (dbPoolInstance) => {
   }
 
   const restartGame = (gameID, callback) => {
-    
+    const queryString = 'UPDATE game SET active_question=1, game_state=$2 WHERE id=$1 RETURNING *;'
+    const queryValues = [gameID, GAME_STATE.STARTING]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        removeAllPlayersFromGame(gameID, callback)
+      }
+    })
+  }
+
+  const removeAllPlayersFromGame = (gameID, callback) => {
+    const queryString = 'DELETE FROM player WHERE game_id =$1'
+    const queryValues = [gameID]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult)
+      }
+    })
   }
   // const setCurrentlyActiveQuestionTo = (gameID, )
 

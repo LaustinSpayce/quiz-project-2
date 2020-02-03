@@ -11,7 +11,7 @@ console.log('hello! I have loaded the browser quiz script!')
 const mainContentDisplay = document.querySelector('#displayContent')
 const advanceGameStateButton = document.querySelector('#advanceGameState')
 const restartGameButton = document.querySelector('#resetGame')
-
+ 
 let clientGameState = GAME_STATE.NONE
 let answerItems = []
 let questionAnswered = false

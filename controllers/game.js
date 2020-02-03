@@ -119,7 +119,14 @@ module.exports = (db) => {
 
   const restartGame = (request, response) => {
     const gameID = request.params.id
-    
+    const callback = (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        response.send('Success!')
+      }
+    }
+    db.game.restartGame(gameID, callback)
   }
 
   /**
@@ -159,11 +166,13 @@ module.exports = (db) => {
         response.send(error)
       } else {
         const scoresArray = []
-        for (const player of queryResult) {
-          scoresArray.push({
-            name: player.name,
-            score: player.score
-          })
+        if (queryResult) {
+          for (const player of queryResult) {
+            scoresArray.push({
+              name: player.name,
+              score: player.score
+            })
+          }
         }
         scoresArray.sort((a, b) => { return (b.score - a.score) })
         const data = { scores: scoresArray }
