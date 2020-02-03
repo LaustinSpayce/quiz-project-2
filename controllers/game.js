@@ -251,6 +251,12 @@ module.exports = (db) => {
     })
   }
 
+  const submitEditedQuestion = (request, response) => {
+    console.log('request submitted')
+    console.log(request.body)
+    response.send('submitted!')
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -269,6 +275,7 @@ module.exports = (db) => {
     displayScores: displayScores,
     registerGame: registerGame,
     playerRegistration: playerRegistration,
-    editQuestion: editQuestion
+    editQuestion: editQuestion,
+    submitEditedQuestion: submitEditedQuestion
   }
 }
