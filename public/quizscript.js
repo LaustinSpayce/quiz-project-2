@@ -11,12 +11,18 @@ console.log('hello! I have loaded the browser quiz script!')
 const mainContentDisplay = document.querySelector('#displayContent')
 const advanceGameStateButton = document.querySelector('#advanceGameState')
 const restartGameButton = document.querySelector('#resetGame')
- 
+
 let clientGameState = GAME_STATE.NONE
 let answerItems = []
 let questionAnswered = false
 let questionNo = 0
-let gameID = 1 // change this later
+let gameID = 0 // change this later
+
+function getGameID() {
+  gameID = window.location.href.split('/')[4]
+}
+
+getGameID()
 
 // AJAX Call to retrieve and display the question.
 const showQuestion = function() {

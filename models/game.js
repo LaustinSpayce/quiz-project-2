@@ -418,6 +418,18 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const createNewGame = (game, callback) => {
+    const queryString = 'INSERT INTO game (name, number_of_questions, active_question, game_state) VALUES ($1, $2, $3, $4) RETURNING *;'
+    const queryValues = [game.name, game.number_of_questions, 1, GAME_STATE.STARTING]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult.rows[0])
+      }
+    })
+  }
+
   return {
     beginGame: beginGame,
     endGame: endGame,
@@ -437,6 +449,7 @@ module.exports = (dbPoolInstance) => {
     editQuestion: editQuestion,
     listAllQuestions: listAllQuestions,
     restartGame: restartGame,
-    listAllGames: listAllGames
+    listAllGames: listAllGames,
+    createNewGame: createNewGame
   }
 }

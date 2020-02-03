@@ -320,9 +320,27 @@ module.exports = (db) => {
     })
   }
 
-  const createNewGame = (request, response) => {
+  const createNewGameForm = (request, response) => {
     console.log('displaying new game form')
     response.render('createnewgame')
+  }
+
+  const createNewGame = (request, response) => {
+    const game = {
+      name: request.body.name,
+      number_of_questions: request.body.noOfQuestions
+    }
+
+    db.game.createNewGame(game, (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        const gameID = queryResult.id
+        const gameURL = '/game/' + gameID + '/play/'
+        response.cookie('CreatorOfGame', gameID)
+        response.redirect(gameURL)
+      }
+    })
   }
 
   /**
@@ -347,6 +365,7 @@ module.exports = (db) => {
     submitEditedQuestion: submitEditedQuestion,
     displayAllQuestions: displayAllQuestions,
     listAllGames: listAllGames,
+    createNewGameForm: createNewGameForm,
     createNewGame: createNewGame
   }
 }

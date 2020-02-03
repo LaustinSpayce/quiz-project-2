@@ -35,7 +35,8 @@ module.exports = (app, allModels) => {
   app.put('/question/:id', gameControllerCallbacks.submitEditedQuestion)
   app.get('/question/', gameControllerCallbacks.displayAllQuestions)
 
-  app.get('/game/new', gameControllerCallbacks.createNewGame)
+  app.get('/game/new', gameControllerCallbacks.createNewGameForm)
+  app.post('/game/', gameControllerCallbacks.createNewGame)
   app.get('/game/:id', gameControllerCallbacks.play)
   app.get('/game/:id/play', gameControllerCallbacks.startSession)
   app.post('/game/:id/play', gameControllerCallbacks.playerRegistration)
