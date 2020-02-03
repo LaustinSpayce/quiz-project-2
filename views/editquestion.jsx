@@ -1,7 +1,7 @@
 const React = require('react')
 const DefaultLayout = require('./layouts/defaultlayout')
 
-class editQuestion extends React.Component {
+class EditQuestion extends React.Component {
 
   render () {
 
@@ -44,4 +44,4 @@ class editQuestion extends React.Component {
   }
 }
 
-module.exports = editQuestion
+module.exports = EditQuestion

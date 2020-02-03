@@ -14,8 +14,6 @@ module.exports = (app, allModels) => {
   const gameControllerCallbacks = require('./controllers/game')(allModels)
 
   // This is where all the magic happens, players are on this link while they play.
-  app.get('/game/:id', gameControllerCallbacks.play)
-
   // app.get('/games/:id', games.getgame);
 
   //
@@ -37,6 +35,8 @@ module.exports = (app, allModels) => {
   app.put('/question/:id', gameControllerCallbacks.submitEditedQuestion)
   app.get('/question/', gameControllerCallbacks.displayAllQuestions)
 
+  app.get('/game/new', gameControllerCallbacks.createNewGame)
+  app.get('/game/:id', gameControllerCallbacks.play)
   app.get('/game/:id/play', gameControllerCallbacks.startSession)
   app.post('/game/:id/play', gameControllerCallbacks.playerRegistration)
   // app.get('/game/:id/play', gameControllerCallbacks.)

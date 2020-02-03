@@ -34,7 +34,7 @@ class GamesIndex extends React.Component {
         <div className='text-center'>
         <h3>Welcome to Stu's Pub Quiz</h3>
         <h4>Please choose a game below</h4>
-        <a className='btn btn-primary' href='#'>Create New Game</a>
+        <a className='btn btn-primary' href='/game/new'>Create New Game</a>
         <hr />
         </div>
         {gameCards}

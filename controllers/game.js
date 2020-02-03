@@ -27,6 +27,9 @@ module.exports = (db) => {
       if (error) {
         response.return(error)
       } else {
+        if (!queryResult) {
+          return
+        }
         if (queryResult.length > 0) {
           gameID = queryResult[0].game_id
           response.redirect('/game/' + gameID + '/play')
@@ -317,6 +320,11 @@ module.exports = (db) => {
     })
   }
 
+  const createNewGame = (request, response) => {
+    console.log('displaying new game form')
+    response.render('createnewgame')
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -338,6 +346,7 @@ module.exports = (db) => {
     editQuestion: editQuestion,
     submitEditedQuestion: submitEditedQuestion,
     displayAllQuestions: displayAllQuestions,
-    listAllGames: listAllGames
+    listAllGames: listAllGames,
+    createNewGame: createNewGame
   }
 }
