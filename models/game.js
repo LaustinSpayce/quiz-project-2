@@ -165,7 +165,7 @@ module.exports = (dbPoolInstance) => {
   }
 
   const updatePlayerLastQuestionAnswered = (playerNo, questionNo, callback) => {
-    const queryString = 'UPDATE player SET last_question_answered_id = $1 WHERE id=$2 RETURNING *;'
+    const queryString = 'ß player SET last_question_answered_id = $1 WHERE id=$2 RETURNING *;'
     const queryValues = [questionNo, playerNo]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
@@ -353,6 +353,18 @@ module.exports = (dbPoolInstance) => {
     return sha256((Math.random() * 1000).toString())
   }
 
+  const editQuestion = (question, callback) => {
+    const queryString = 'UPDATE question SET question=$2, answer_1=$3, answer_2=$4, answer_3=$5, answer_4=$6 WHERE id=$1 RETURNING *;'
+    const queryValues = [question.id, question.question, question.answer_1, question.answer_2, question.answer_3, question.answer_4]
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        callback(null, queryResult.rows[0])
+      }
+    })
+  }
+
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
@@ -370,6 +382,7 @@ module.exports = (dbPoolInstance) => {
     advanceGameState: advanceGameState,
     getScores: getScores,
     playerSubmitAnswer: playerSubmitAnswer,
-    playerRegistration: playerRegistration
+    playerRegistration: playerRegistration,
+    editQuestion: editQuestion
   }
 }

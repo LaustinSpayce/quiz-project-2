@@ -217,12 +217,12 @@ module.exports = (db) => {
     const gameID = request.params.id
     const inputName = request.body.name
 
-    const afterRegistration = (error, queryCallback) => {
+    const afterRegistration = (error, queryResult) => {
       if (error) {
         response.send('error')
       } else {
-        console.log(queryCallback)
-        const playerToken = queryCallback.token
+        console.log(queryResult)
+        const playerToken = queryResult.token
         response.cookie('playerToken', playerToken)
         response.render('game/game')
       }
@@ -252,9 +252,23 @@ module.exports = (db) => {
   }
 
   const submitEditedQuestion = (request, response) => {
-    console.log('request submitted')
     console.log(request.body)
-    response.send('submitted!')
+    const questionData = {
+      id: request.body.id,
+      question: request.body.question,
+      answer_1: request.body.answer_1,
+      answer_2: request.body.answer_2,
+      answer_3: request.body.answer_3,
+      answer_4: request.body.answer_4
+    }
+    const afterEditedQuestionSubmission = (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        response.send('result!')
+      }
+    }
+    db.game.editQuestion(questionData, afterEditedQuestionSubmission)
   }
 
   /**
