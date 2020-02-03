@@ -1,22 +1,16 @@
 const React = require('react')
 const DefaultLayout = require('./layouts/defaultlayout')
 
-class QuestionsIndex extends React.Component {
+class GamesIndex extends React.Component {
   render () {
-    const questionCards = this.props.questions.map(question => {
-      const editURL = '/question/' + question.id + '/edit'
+    const gameCards = this.props.games.map(game => {
+      const joinURL = '/game/' + game.id + '/play'
       return (
         <div className='card mb-3'>
           <div className='card-body'>
-            <h5 className='card-title'>{question.id} - {question.question}</h5>
-            <hr/>
-            <ol>
-              <li>{question.answer_1}</li>
-              <li>{question.answer_2}</li>
-              <li>{question.answer_3}</li>
-              <li>{question.answer_4}</li>
-            </ol>
-            <a href={editURL} className="btn btn-primary">Edit this question</a>
+            <h5 className='card-title'>{game.name}</h5>
+            <p><strong>Number of questions:</strong> {game.number_of_questions}</p>
+            <a href={joinURL} className="btn btn-primary">Join this game</a>
           </div>
         </div>
       )
@@ -37,11 +31,16 @@ class QuestionsIndex extends React.Component {
     return (
       <DefaultLayout>
         {optionalMessage}
-        <h3>Questions</h3>
-        {questionCards}
+        <div className='text-center'>
+        <h3>Welcome to Stu's Pub Quiz</h3>
+        <h4>Please choose a game below</h4>
+        <a className='btn btn-primary' href='#'>Create New Game</a>
+        <hr />
+        </div>
+        {gameCards}
       </DefaultLayout>
     )
   }
 }
 
-module.exports = QuestionsIndex
+module.exports = GamesIndex

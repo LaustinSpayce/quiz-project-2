@@ -403,6 +403,20 @@ module.exports = (dbPoolInstance) => {
     })
   }
   // const setCurrentlyActiveQuestionTo = (gameID, )
+  const listAllGames = (callback) => {
+    const queryString = 'SELECT * FROM game;'
+    dbPoolInstance.query(queryString, (error, queryResult) => {
+      if (error) {
+        callback(error, null)
+      } else {
+        // First we return the games that can be joined
+        const result = queryResult.rows
+        result.filter(game => game.game_state === GAME_STATE.STARTING)
+        result.sort((a, b) => { return a.id - b.id })
+        callback(null, result)
+      }
+    })
+  }
 
   return {
     beginGame: beginGame,
@@ -422,6 +436,7 @@ module.exports = (dbPoolInstance) => {
     playerRegistration: playerRegistration,
     editQuestion: editQuestion,
     listAllQuestions: listAllQuestions,
-    restartGame: restartGame
+    restartGame: restartGame,
+    listAllGames: listAllGames
   }
 }

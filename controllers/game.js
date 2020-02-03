@@ -304,6 +304,19 @@ module.exports = (db) => {
     })
   }
 
+  const listAllGames = (request, response) => {
+    db.game.listAllGames((error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        const data = {
+          games: queryResult
+        }
+        response.render('gamesindex', data)
+      }
+    })
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -324,6 +337,7 @@ module.exports = (db) => {
     playerRegistration: playerRegistration,
     editQuestion: editQuestion,
     submitEditedQuestion: submitEditedQuestion,
-    displayAllQuestions: displayAllQuestions
+    displayAllQuestions: displayAllQuestions,
+    listAllGames: listAllGames
   }
 }
