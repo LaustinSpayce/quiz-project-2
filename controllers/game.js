@@ -136,6 +136,7 @@ module.exports = (db) => {
       }
 
       const data = {
+        id: questionID,
         question: question.question,
         answer_1: question.answer_1,
         answer_2: question.answer_2,
@@ -237,6 +238,7 @@ module.exports = (db) => {
         response.send(error)
       } else {
         const data = {
+          id: questionID,
           question: question.question,
           answer_1: question.answer_1,
           answer_2: question.answer_2,
