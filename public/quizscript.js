@@ -105,7 +105,20 @@ const advanceGameState = function() {
   request.open('GET', url)
   request.send()
 }
-advanceGameStateButton.addEventListener('click', advanceGameState)
+if (advanceGameStateButton) {
+  advanceGameStateButton.addEventListener('click', advanceGameState)
+}
+
+const restartTheGame = function() {
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', gameStateResponseHandler)
+  const url = '/game/' + gameID + '/restart/'
+  request.open('GET', url)
+  request.send()
+}
+if (restartGameButton) {
+  restartGameButton.addEventListener('click', restartTheGame)
+}
 
 
 const updateCurrentGameState = function() {

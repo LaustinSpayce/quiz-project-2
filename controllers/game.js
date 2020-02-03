@@ -118,7 +118,8 @@ module.exports = (db) => {
   }
 
   const restartGame = (request, response) => {
-    console.log('debug restart game hit')
+    const gameID = request.params.id
+    
   }
 
   /**

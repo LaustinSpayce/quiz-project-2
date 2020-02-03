@@ -12,10 +12,10 @@ class question extends React.Component {
     }
 
     // create an array with the 4 answers
-    const answer1 = <div id='answer_1' className='answer display-2'>{this.props.answer_1}</div>
-    const answer2 = <div id='answer_2' className='answer display-2'>{this.props.answer_2}</div>
-    const answer3 = <div id='answer_3' className='answer display-2'>{this.props.answer_3}</div>
-    const answer4 = <div id='answer_4' className='answer display-2'>{this.props.answer_4}</div>
+    const answer1 = <div id='answer_1' className='answer h4'>{this.props.answer_1}</div>
+    const answer2 = <div id='answer_2' className='answer h4'>{this.props.answer_2}</div>
+    const answer3 = <div id='answer_3' className='answer h4'>{this.props.answer_3}</div>
+    const answer4 = <div id='answer_4' className='answer h4'>{this.props.answer_4}</div>
     const answerArray = [answer1, answer2, answer3, answer4]
     // shuffle the array
     shuffle(answerArray)
@@ -24,7 +24,7 @@ class question extends React.Component {
     return (
       <div>
         <div className="row">
-        <h2 id='question'>{this.props.question}</h2>
+        <h1 id='question'>{this.props.question}</h1>
         </div>
         <div className="row text-center">
           <div className="col-md-6 bg-primary border rounded p-1">

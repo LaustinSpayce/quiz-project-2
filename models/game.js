@@ -374,11 +374,14 @@ module.exports = (dbPoolInstance) => {
         // First sort the items by id.
         const result = queryResult.rows
         result.sort((a, b) => { return a.id - b.id })
-        callback(null, queryResult.rows)
+        callback(null, result)
       }
     })
   }
 
+  const restartGame = (gameID, callback) => {
+    
+  }
   // const setCurrentlyActiveQuestionTo = (gameID, )
 
   return {
@@ -398,6 +401,7 @@ module.exports = (dbPoolInstance) => {
     playerSubmitAnswer: playerSubmitAnswer,
     playerRegistration: playerRegistration,
     editQuestion: editQuestion,
-    listAllQuestions: listAllQuestions
+    listAllQuestions: listAllQuestions,
+    restartGame: restartGame
   }
 }
