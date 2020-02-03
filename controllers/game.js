@@ -99,7 +99,10 @@ module.exports = (db) => {
   }
 
   const startSession = (request, response) => {
-    response.render('game/game')
+    const gameID = request.params.id
+    const isPlayerOwner = request.cookies.creatorOfGame === gameID
+    const data = { boss: isPlayerOwner }
+    response.render('game/game', data)
   }
 
   const beginGame = (request, response) => {
@@ -236,8 +239,10 @@ module.exports = (db) => {
       } else {
         console.log(queryResult)
         const playerToken = queryResult.token
+        const isPlayerOwner = request.cookies.creatorOfGame === gameID
+        const data = { boss: isPlayerOwner }
         response.cookie('playerToken', playerToken)
-        response.render('game/game')
+        response.render('game/game', data)
       }
     }
 
@@ -337,7 +342,7 @@ module.exports = (db) => {
       } else {
         const gameID = queryResult.id
         const gameURL = '/game/' + gameID + '/play/'
-        response.cookie('CreatorOfGame', gameID)
+        response.cookie('creatorOfGame', gameID)
         response.redirect(gameURL)
       }
     })
