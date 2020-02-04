@@ -66,7 +66,7 @@ const gameOver = function() {
   // The game has finished so we no longer need to keep pinging the server.
   clearInternal(pingTheServer)
   const request = new XMLHttpRequest()
-  request.addEventListener('load', cuntion() {
+  request.addEventListener('load', function() {
     mainContentDisplay.innerHTML = this.responseText
   })
   const getURL = '/game/' + gameID + '/gameover'

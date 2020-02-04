@@ -1,4 +1,5 @@
 const React = require('react')
+const NavBar = require('../components/navbar')
 
 class DefaultLayout extends React.Component {
   render () {
@@ -7,11 +8,12 @@ class DefaultLayout extends React.Component {
         <head>
         <meta charSet='utf-8'/>
         <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'/>
-        <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossOrigin='anonymous'/>
+        <link rel='stylesheet' href='/bootstrap.min.css'/>
         <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css'/>
         </head>
           <body>
-            <div className='container'>
+            <NavBar/>
+            <div className='container mt-3'>
               {this.props.children}
             </div>
             <script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossOrigin='anonymous'></script>

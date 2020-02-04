@@ -32,7 +32,7 @@ class GamesIndex extends React.Component {
       <DefaultLayout>
         {optionalMessage}
         <div className='text-center'>
-        <h3>Welcome to Stu's Pub Quiz</h3>
+        <h3>Welcome to Stu's Trivia Night</h3>
         <h4>Please choose a game below</h4>
         <a className='btn btn-primary' href='/game/new'>Create New Game</a>
         <hr />

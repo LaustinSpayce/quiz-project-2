@@ -7,9 +7,13 @@ class Game extends React.Component {
     let bossTools = <div></div>
 
     if (this.props.boss) {
-      bossTools = (<div id="debuggingTools">
-        <button className="btn btn-primary" id="advanceGameState">Advance to next game state</button>
-        <button className="btn btn-danger" id="resetGame">Reset The Game</button>
+      bossTools = (<div id="debuggingTools" className='row'>
+      <div className='col-md-6'>
+        <button className="btn btn-primary" id="advanceGameState" width='100%'>Advance to next game state</button>
+      </div>
+      <div className='col-md-6'>
+        <button className="btn btn-danger" id="resetGame" width='100%'>Reset The Game</button>
+        </div>
       </div>)
     }
     return (
