@@ -17,7 +17,7 @@ class EditQuestion extends React.Component {
             </div>
             <div className='form-group'>
               <label htmlFor='question'>Question</label>
-              <input type='text' className='form-control' id='question' name='question' defaultValue={this.props.question}/>
+              <input type='text' className='form-control' id='question' name='question' defaultValue={this.props.question} required/>
             </div>
             <div className="form-group">
               <label htmlFor='answer_1'>Answer One (The correct answer)</label>

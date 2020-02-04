@@ -29,6 +29,7 @@ module.exports = (app, allModels) => {
   // Destroy
 
   // Show - Show the specific question.
+  app.get('/question/new', gameControllerCallbacks.displayNewQuestionForm)
   app.get('/question/:id', gameControllerCallbacks.displayQuestion)
   app.post('/question/:id', gameControllerCallbacks.submitAnswer)
   app.get('/question/:id/edit', gameControllerCallbacks.editQuestion)

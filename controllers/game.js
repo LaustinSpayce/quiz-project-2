@@ -402,6 +402,10 @@ module.exports = (db) => {
     db.game.getScores(gameID, displayScoresCallback)
   }
 
+  const displayNewQuestionForm = (request, response) => {
+    response.render('newquestion')
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -426,6 +430,7 @@ module.exports = (db) => {
     listAllGames: listAllGames,
     createNewGameForm: createNewGameForm,
     createNewGame: createNewGame,
-    gameOverScreen: gameOverScreen
+    gameOverScreen: gameOverScreen,
+    displayNewQuestionForm: displayNewQuestionForm
   }
 }
