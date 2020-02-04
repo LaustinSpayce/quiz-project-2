@@ -53,10 +53,10 @@ VALUES
 -- VALUES
 -- ('testPlayer', 'aaaaa', 1);
 
-INSERT INTO game
-(name, number_of_questions, active_question, invite_password, game_state)
-VALUES
-('testGame', 10, 1, 'password', 'starting');
+-- INSERT INTO game
+-- (name, number_of_questions, active_question, invite_password, game_state)
+-- VALUES
+-- ('testGame', 10, 1, 'password', 'starting');
 
 -- INSERT INTO game_questions
 -- (question_id, game_id, ordering)

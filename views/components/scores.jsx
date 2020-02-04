@@ -4,7 +4,11 @@ const React = require('react')
 class Scores extends React.Component {
   render () {
     const scorelist = this.props.scores.map((element) => {
-      return(<tr><th scope='row'>{element.name}</th><td>{element.score}</td></tr>)
+      let tableclass = ""
+      if (element.name === this.props.playerName) {
+        tableclass = 'table-info'
+      }
+      return(<tr className={tableclass}><th scope='row'>{element.name}</th><td>{element.score}</td></tr>)
     })
     return (
       <div>

@@ -65,7 +65,7 @@ const gameStarting = function() {
 // Game over screen
 const gameOver = function() {
   // The game has finished so we no longer need to keep pinging the server.
-  clearInternal(pingTheServer)
+  clearInterval(pingTheServer)
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
     mainContentDisplay.innerHTML = this.responseText

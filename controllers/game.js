@@ -170,7 +170,7 @@ module.exports = (db) => {
 
   const displayScores = (request, response) => {
     const gameID = request.params.id
-
+    const playerName = request.cookies.playerName
     const displayScoresCallback = (error, queryResult) => {
       if (error) {
         console.log('error')
@@ -186,7 +186,7 @@ module.exports = (db) => {
           }
         }
         scoresArray.sort((a, b) => { return (b.score - a.score) })
-        const data = { scores: scoresArray }
+        const data = { scores: scoresArray, playerName: playerName }
         response.render('components/scores', data)
       }
     }
@@ -206,20 +206,20 @@ module.exports = (db) => {
       playerAnswers = request.cookies.playerAnswers
     }
     db.game.playerSubmitAnswer(questionID, answerID, playerToken, (error, queryResult) => {
+      const answerData = {
+        questionID: questionID,
+        answerSelectedText: answerSelectedText,
+        correctAnswerText: correctAnswerText,
+        gameID: gameID
+      }
+      playerAnswers.push(answerData)
+      response.cookie('playerAnswers', playerAnswers)
       if (error) {
         response.send(error)
       } else {
         if (queryResult === 'registerPlayer') {
           response.redirect('/game/')
         }
-        const answerData = {
-          questionID: questionID,
-          answerSelectedText: answerSelectedText,
-          correctAnswerText: correctAnswerText,
-          gameID: gameID
-        }
-        playerAnswers.push(answerData)
-        response.cookie('playerAnswers', playerAnswers)
         const data = JSON.stringify(queryResult)
         response.send(data)
       }
@@ -258,7 +258,6 @@ module.exports = (db) => {
   const playerRegistration = (request, response) => {
     const gameID = request.params.id
     const inputName = request.body.name
-
     const afterRegistration = (error, queryResult) => {
       if (error) {
         response.send('error')
@@ -270,6 +269,7 @@ module.exports = (db) => {
         const ipAddress = ip.address() + ':' + portNo + '/game/' + gameID + '/play'
         const data = { boss: isPlayerOwner, gameID: gameID, ipAddress: ipAddress }
         response.cookie('playerToken', playerToken)
+        response.cookie('playerName', inputName)
         response.render('game/game', data)
       }
     }
@@ -377,7 +377,29 @@ module.exports = (db) => {
   }
 
   const gameOverScreen = (request, response) => {
+    const gameID = request.params.id
+    const playerAnswers = request.cookies.playerAnswers
+    const playerName = request.cookies.playerName
     console.log('Game over, try again!')
+    const displayScoresCallback = (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        const scoresArray = []
+        if (queryResult) {
+          for (const player of queryResult) {
+            scoresArray.push({
+              name: player.name,
+              score: player.score
+            })
+          }
+        }
+        scoresArray.sort((a, b) => { return (b.score - a.score) })
+        const data = { playerAnswers: playerAnswers, scores: scoresArray, playerName: playerName }
+        response.render('components/gameover', data)
+      }
+    }
+    db.game.getScores(gameID, displayScoresCallback)
   }
 
   /**
