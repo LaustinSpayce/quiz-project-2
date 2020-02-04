@@ -151,15 +151,17 @@ module.exports = (db) => {
         console.log('Error!')
         console.log(error)
       }
-
-      const data = {
-        id: questionID,
-        question: question.question,
-        answer_1: question.answer_1,
-        answer_2: question.answer_2,
-        answer_3: question.answer_3,
-        answer_4: question.answer_4,
-        gameState: GAME_STATE.QUESTION
+      let data = {}
+      if (question) {
+        data = {
+          id: questionID,
+          question: question.question,
+          answer_1: question.answer_1,
+          answer_2: question.answer_2,
+          answer_3: question.answer_3,
+          answer_4: question.answer_4,
+          gameState: GAME_STATE.QUESTION
+        }
       }
 
       response.render('components/question', data)

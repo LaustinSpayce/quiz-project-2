@@ -10,7 +10,7 @@ class question extends React.Component {
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-
+    if (!this.props) { return (<div>'No Question'</div>) }
     // create an array with the 4 answers
     const answer1 = <div id='answer_1' className='answer h4'>{this.props.answer_1}</div>
     const answer2 = <div id='answer_2' className='answer h4'>{this.props.answer_2}</div>
