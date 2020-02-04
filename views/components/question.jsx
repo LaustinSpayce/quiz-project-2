@@ -27,16 +27,16 @@ class question extends React.Component {
         <h1 id='question'>{this.props.question}</h1>
         </div>
         <div className="row text-center">
-          <div className="col-md-6 bg-primary border rounded p-1">
+          <div className="col-md-6 bg-primary border rounded p-1 fadeInLeft animated">
             {answerArray[0]}
           </div>
-          <div className="col-md-6 bg-danger border rounded p-1">
+          <div className="col-md-6 bg-danger border rounded p-1 fadeInRight animated">
             {answerArray[1]}
           </div>
-          <div className="col-md-6 bg-info border rounded p-1">
+          <div className="col-md-6 bg-info border rounded p-1 fadeInLeft animated">
             {answerArray[2]}
           </div>
-          <div className="col-md-6 bg-warning border rounded p-1">
+          <div className="col-md-6 bg-warning border rounded p-1 fadeInRight animated">
             {answerArray[3]}
           </div>
         </div>

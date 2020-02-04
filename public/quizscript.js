@@ -31,7 +31,6 @@ const showQuestion = function() {
     mainContentDisplay.innerHTML = this.responseText
     answerItems = document.querySelectorAll('.answer')
     questionAnswered = false;
-
     for (const answerItem of answerItems) {
       answerItem.addEventListener('click', onAnswerClick)
     }
@@ -148,8 +147,13 @@ const responseHandler = function () {
 
 // When you click the answer it is sent to the server.
 const onAnswerClick = function(event) {
-  console.log('clicky click click ' + event.target.id)
   if (questionAnswered) return
+  for (const answer of answerItems) {
+    answer.classList.add('animated')
+    answer.classList.add('bounceOut')
+  }
+  this.classList.remove('animated')
+  this.classList.remove('bounceOut')
   const answerID = event.target.id
   const data = {
     answerID: answerID,

@@ -18,6 +18,7 @@ class Game extends React.Component {
         </div>
         <hr />
         {bossTools}
+        Tell your friends to join the game at {this.props.ipAddress}
         <script src='/quizscript.js' />
       </DefaultLayout>
     )

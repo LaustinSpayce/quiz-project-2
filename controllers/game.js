@@ -6,6 +6,8 @@ const GAME_STATE = {
   NONE: 'none' // No game state
 }
 
+const ip = require('ip')
+
 module.exports = (db) => {
   /**
      * ===========================================
@@ -19,8 +21,6 @@ module.exports = (db) => {
     let gameID = request.params.id
     const inviteID = request.query.invite
     // let playerID = 0
-    console.log('game ID ' + gameID)
-    console.log('InviteID ' + inviteID)
     const playerToken = request.cookies.playerToken
     // Check if player has cookie, if cookie matches a game in progress then
     const afterGetPlayerId = (error, queryResult) => {
@@ -43,7 +43,8 @@ module.exports = (db) => {
               response.send('not a valid invite')
             } else {
               // Ask for player to input their name.
-              response.render('components/playername')
+              const data = { gameID: gameID }
+              response.render('components/playername', data)
             }
           })
         }
@@ -101,7 +102,9 @@ module.exports = (db) => {
   const startSession = (request, response) => {
     const gameID = request.params.id
     const isPlayerOwner = request.cookies.creatorOfGame === gameID
-    const data = { boss: isPlayerOwner }
+    const portNo = process.env.PORT || 3000
+    const ipAddress = ip.address() + ':' + portNo + '/game/' + gameID + '/play'
+    const data = { boss: isPlayerOwner, gameID: gameID, ipAddress: ipAddress }
     response.render('game/game', data)
   }
 
@@ -223,7 +226,8 @@ module.exports = (db) => {
         }
         // if no valid token, clear
         response.clearCookie('playerToken')
-        response.render('components/playername')
+        const data = { gameID: gameID }
+        response.render('components/playername', data)
       }
     }
     db.game.getPlayerID(playerToken, resultFromPlayerAuth)
@@ -240,7 +244,9 @@ module.exports = (db) => {
         console.log(queryResult)
         const playerToken = queryResult.token
         const isPlayerOwner = request.cookies.creatorOfGame === gameID
-        const data = { boss: isPlayerOwner }
+        const portNo = process.env.PORT || 3000
+        const ipAddress = ip.address() + ':' + portNo + '/game/' + gameID + '/play'
+        const data = { boss: isPlayerOwner, gameID: gameID, ipAddress: ipAddress }
         response.cookie('playerToken', playerToken)
         response.render('game/game', data)
       }
