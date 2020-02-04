@@ -201,6 +201,9 @@ module.exports = (db) => {
       if (error) {
         response.send(error)
       } else {
+        if (queryResult === 'registerPlayer') {
+          response.redirect('/game/')
+        }
         const data = JSON.stringify(queryResult)
         response.send(data)
       }

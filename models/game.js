@@ -331,6 +331,10 @@ module.exports = (dbPoolInstance) => {
         callback(error, null)
         return
       }
+      // If query doesn't fire at all.
+      if (!queryResult) {
+        callback(null, 'registerPlayer')
+      }
       playerID = queryResult[0].id
       lastQuestionAnswered = queryResult[0].last_question_answered_id
       if (lastQuestionAnswered < questionID) {

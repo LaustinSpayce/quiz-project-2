@@ -23,20 +23,23 @@ class question extends React.Component {
 
     return (
       <div>
-        <div className="row">
-        <h1 id='question'>{this.props.question}</h1>
-        </div>
+          <h4 id='questionID' className='p-3'>Question {this.props.id}</h4>
+          <div className="row">
+            <div className="mb-2 p-3 bg-light border rounded text-dark w-100">
+              <h1 id='question'>{this.props.question}</h1>
+            </div>
+          </div>
         <div className="row text-center">
-          <div className="col-md-6 bg-primary border rounded p-1 fadeInLeft animated">
+          <div className="col-md-6 bg-primary border rounded p-2 fadeInLeft animated">
             {answerArray[0]}
           </div>
-          <div className="col-md-6 bg-danger border rounded p-1 fadeInRight animated">
+          <div className="col-md-6 bg-danger border rounded p-2 fadeInRight animated">
             {answerArray[1]}
           </div>
-          <div className="col-md-6 bg-info border rounded p-1 fadeInLeft animated">
+          <div className="col-md-6 bg-info border rounded p-2 fadeInLeft animated">
             {answerArray[2]}
           </div>
-          <div className="col-md-6 bg-warning border rounded p-1 fadeInRight animated">
+          <div className="col-md-6 bg-warning border rounded p-2 fadeInRight animated">
             {answerArray[3]}
           </div>
         </div>

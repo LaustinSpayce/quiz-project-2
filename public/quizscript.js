@@ -44,7 +44,6 @@ const showQuestion = function() {
 const showScores = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
-
     mainContentDisplay.innerHTML = this.responseText
   })
   const getURL = '/game/' + gameID + '/scores'
