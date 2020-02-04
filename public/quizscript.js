@@ -51,6 +51,7 @@ const showScores = function() {
   request.send()
 }
 
+// AJAX to show the please wait screen when game is starting
 const gameStarting = function() {
   const request = new XMLHttpRequest()
   request.addEventListener('load', function() {
@@ -61,6 +62,7 @@ const gameStarting = function() {
   request.send()
 }
 
+// Game over screen
 const gameOver = function() {
   // The game has finished so we no longer need to keep pinging the server.
   clearInternal(pingTheServer)
@@ -73,7 +75,7 @@ const gameOver = function() {
   request.send()
 }
 
-// Response Handler for the every 0.25 second ping to the server
+// Response Handler for the every 1 second ping to the server
 const mainContentResponseHandler = function() {
   // console.log(this.responseText)
   const data = JSON.parse(this.responseText)
@@ -163,12 +165,17 @@ const onAnswerClick = function(event) {
     answer.classList.add('animated')
     answer.classList.add('bounceOut')
   }
+  const answer1Text = document.querySelector('#answer_1').innerText
+  const thisAnswerText = this.innerText
   this.classList.remove('animated')
   this.classList.remove('bounceOut')
   const answerID = event.target.id
   const data = {
+    gameID: gameID,
     answerID: answerID,
-    questionNo: questionNo
+    questionNo: questionNo,
+    answerSelectedText: thisAnswerText,
+    correctAnswerText: answer1Text
    }
   const request = new XMLHttpRequest()
   request.addEventListener('load', responseHandler)

@@ -194,9 +194,17 @@ module.exports = (db) => {
   }
 
   const submitAnswer = (request, response) => {
+    const gameID = request.body.gameID
     const questionID = request.params.id
     const answerID = request.body.answerID
     const playerToken = request.cookies.playerToken
+    const answerSelectedText = request.body.answerSelectedText
+    const correctAnswerText = request.body.correctAnswerText
+    console.log(request.cookies.playerAnswers)
+    let playerAnswers = []
+    if (request.cookies.playerAnswers) {
+      playerAnswers = request.cookies.playerAnswers
+    }
     db.game.playerSubmitAnswer(questionID, answerID, playerToken, (error, queryResult) => {
       if (error) {
         response.send(error)
@@ -204,6 +212,14 @@ module.exports = (db) => {
         if (queryResult === 'registerPlayer') {
           response.redirect('/game/')
         }
+        const answerData = {
+          questionID: questionID,
+          answerSelectedText: answerSelectedText,
+          correctAnswerText: correctAnswerText,
+          gameID: gameID
+        }
+        playerAnswers.push(answerData)
+        response.cookie('playerAnswers', playerAnswers)
         const data = JSON.stringify(queryResult)
         response.send(data)
       }
@@ -231,6 +247,7 @@ module.exports = (db) => {
         }
         // if no valid token, clear
         response.clearCookie('playerToken')
+        response.clearCookie('playerAnswers')
         const data = { gameID: gameID }
         response.render('components/playername', data)
       }
