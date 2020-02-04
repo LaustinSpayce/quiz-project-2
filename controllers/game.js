@@ -406,6 +406,25 @@ module.exports = (db) => {
     response.render('newquestion')
   }
 
+  const submitNewQuestion = (request, response) => {
+    const questionData = {
+      question: request.body.question,
+      answer_1: request.body.answer_1,
+      answer_2: request.body.answer_2,
+      answer_3: request.body.answer_3,
+      answer_4: request.body.answer_4
+    }
+    const afterSubmittedQuestionSubmission = (error, queryResult) => {
+      if (error) {
+        response.send(error)
+      } else {
+        questionData.id = queryResult.id
+        response.render('components/question', questionData)
+      }
+    }
+    db.game.addNewQuestion(questionData, afterSubmittedQuestionSubmission)
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -431,6 +450,7 @@ module.exports = (db) => {
     createNewGameForm: createNewGameForm,
     createNewGame: createNewGame,
     gameOverScreen: gameOverScreen,
-    displayNewQuestionForm: displayNewQuestionForm
+    displayNewQuestionForm: displayNewQuestionForm,
+    submitNewQuestion: submitNewQuestion
   }
 }

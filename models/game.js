@@ -163,10 +163,11 @@ module.exports = (dbPoolInstance) => {
   }
 
   const updatePlayerLastQuestionAnswered = (playerNo, questionNo, callback) => {
-    const queryString = 'ß player SET last_question_answered_id = $1 WHERE id=$2 RETURNING *;'
+    const queryString = 'UPDATE player SET last_question_answered_id = $1 WHERE id=$2 RETURNING *;'
     const queryValues = [questionNo, playerNo]
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
+        console.log(error)
         callback(error, null)
       } else {
         callback(null, error)
@@ -442,6 +443,20 @@ module.exports = (dbPoolInstance) => {
     })
   }
 
+  const addNewQuestion = (question, callback) => {
+    const queryString = 'INSERT INTO question (question, answer_1, answer_2, answer_3, answer_4) VALUES ($1, $2, $3, $4, $5) RETURNING *;'
+    const queryValues = [question.question, question.answer_1, question.answer_2, question.answer_3, question.answer_4]
+    console.log(queryValues)
+    dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+      if (error) {
+        console.log(error)
+        callback(error, null)
+      } else {
+        callback(null, queryResult.rows[0])
+      }
+    })
+  }
+
   return {
     beginGame: beginGame,
     endGame: endGame,
@@ -462,6 +477,7 @@ module.exports = (dbPoolInstance) => {
     listAllQuestions: listAllQuestions,
     restartGame: restartGame,
     listAllGames: listAllGames,
-    createNewGame: createNewGame
+    createNewGame: createNewGame,
+    addNewQuestion: addNewQuestion
   }
 }
