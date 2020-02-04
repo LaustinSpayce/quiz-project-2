@@ -10,7 +10,7 @@ class EditQuestion extends React.Component {
       <DefaultLayout>
       <div>
         <div className="row">
-          <form method='POST' action={editURL} >
+          <form method='POST' action={editURL} className='w-100' >
             <div className='form-group'>
               <label htmlFor='question'>Question No.</label>
               <input type='text' className='form-control' id='question' name='id' defaultValue={this.props.id} readOnly/>

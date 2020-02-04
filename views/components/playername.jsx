@@ -5,7 +5,7 @@ class DefaultLayout extends React.Component {
 
     const actionURL = '/game/' + this.props.gameID + '/play'
     return (
-      <form action={actionURL} method='POST'>
+      <form action={actionURL} method='POST' className='w-100'>
         <hr/>
         <p><input className="form-control form-control-lg" type="text" placeholder="Please enter your name" name='name' required/></p>
         <input className="btn btn-primary" type="submit"/>

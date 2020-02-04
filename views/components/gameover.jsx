@@ -3,13 +3,20 @@ const React = require('react')
 
 class GameOver extends React.Component {
   render () {
+
+    // Scores
     const scorelist = this.props.scores.map((element) => {
       let tableclass = ""
       if (element.name === this.props.playerName) {
         tableclass = 'table-info'
       }
-      return(<tr className={tableclass}><th scope='row'>{element.name}</th><td>{element.score}</td></tr>)
+      return(<tr className={tableclass}>
+          <th scope='row'>{element.name}</th>
+          <td>{element.score}</td>
+      </tr>)
     })
+
+    // List answers, correct answers green, wrong answers red.
     const answersList = this.props.playerAnswers.map((question) => {
       let tableclass = ""
       if (question.answerSelectedText === question.correctAnswerText) {
@@ -17,8 +24,14 @@ class GameOver extends React.Component {
       } else {
         tableclass = 'table-danger'
       }
-      return(<tr className={tableclass}><th scope='row'>{question.questionID}</th><td>{question.answerSelectedText}</td><td>{question.correctAnswerText}</td></tr>)
+      return(<tr className={tableclass}>
+          <th scope='row'>{question.questionID}</th>
+          <td>{question.answerSelectedText}</td>
+          <td>{question.correctAnswerText}</td>
+      </tr>)
     })
+
+    // main return
     return (
       <div>
         <h1 id='GameOver'>Scores:</h1>
