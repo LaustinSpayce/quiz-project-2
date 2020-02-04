@@ -277,9 +277,13 @@ module.exports = (dbPoolInstance) => {
         console.log(error)
         controllerCallback(error, null)
       } else {
-        gameID = queryResponse[0].game_id
-        // What is the current game state for this game?
-        currentGameState(gameID, gameStateCallback)
+        if (queryResponse[0]) {
+          gameID = queryResponse[0].game_id
+          // What is the current game state for this game?
+          currentGameState(gameID, gameStateCallback)
+        } else {
+          controllerCallback(null, queryResponse)
+        }
       }
     }
     // First check the player is allowed to advance the game state.

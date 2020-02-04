@@ -4,17 +4,25 @@ const React = require('react')
 class Scores extends React.Component {
   render () {
     const scorelist = this.props.scores.map((element) => {
-      return(<li>{element.name} - {element.score}</li>)
+      return(<tr><th scope='row'>{element.name}</th><td>{element.score}</td></tr>)
     })
     return (
       <div>
         <div className="row">
-        <h2 id='Scores'>Scores</h2>
+        <h1 id='Scores'>Scores</h1>
         </div>
         <div>
-          <ul>
+          <table className='table'>
+            <thead>
+              <tr>
+                <th scope='col'>Name</th>
+                <th scope='col'>Score</th>
+              </tr>
+            </thead>
+            <tbody>
             {scorelist}
-          </ul>
+            </tbody>
+          </table>
         </div>
       </div>
     )
