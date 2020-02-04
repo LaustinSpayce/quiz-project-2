@@ -354,6 +354,10 @@ module.exports = (db) => {
     })
   }
 
+  const gameOverScreen = (request, response) => {
+    console.log('Game over, try again!')
+  }
+
   /**
  * ===========================================
  * Export controller functions as a module
@@ -377,6 +381,7 @@ module.exports = (db) => {
     displayAllQuestions: displayAllQuestions,
     listAllGames: listAllGames,
     createNewGameForm: createNewGameForm,
-    createNewGame: createNewGame
+    createNewGame: createNewGame,
+    gameOverScreen: gameOverScreen
   }
 }

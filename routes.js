@@ -48,6 +48,7 @@ module.exports = (app, allModels) => {
   app.get('/game/:id/nextround', gameControllerCallbacks.advanceGameState)
   app.get('/game/:id/restart', gameControllerCallbacks.restartGame)
   app.get('/game/:id/scores', gameControllerCallbacks.displayScores)
+  app.get('/game/:id/gameover', gameControllerCallbacks.gameOverScreen)
   app.get('/game/', gameControllerCallbacks.listAllGames)
   app.get('/', (request, response) => response.redirect('/game/'))
 }

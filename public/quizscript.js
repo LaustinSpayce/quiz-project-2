@@ -62,6 +62,18 @@ const gameStarting = function() {
   request.send()
 }
 
+const gameOver = function() {
+  // The game has finished so we no longer need to keep pinging the server.
+  clearInternal(pingTheServer)
+  const request = new XMLHttpRequest()
+  request.addEventListener('load', cuntion() {
+    mainContentDisplay.innerHTML = this.responseText
+  })
+  const getURL = '/game/' + gameID + '/gameover'
+  request.open('GET', getURL)
+  request.send()
+}
+
 // Response Handler for the every 0.25 second ping to the server
 const mainContentResponseHandler = function() {
   // console.log(this.responseText)
@@ -88,7 +100,7 @@ const mainContentResponseHandler = function() {
         break
       case GAME_STATE.GAMEOVER:
         console.log('Game over, final score')
-        showScores()
+        gameOver()
         break
       default:
         console.log('you should not be here')

@@ -7,7 +7,7 @@ const GAME_STATE = {
 }
 
 const sha256 = require('js-sha256')
-const ip = require('ip')
+// const ip = require('ip')
 
 const ROUND_TIMER = 10000
 // const BETWEEN_ROUNDS = 5000
@@ -68,7 +68,7 @@ module.exports = (dbPoolInstance) => {
       if (error) {
         callback(error, null)
       } else {
-        callback(null, error)
+        callback(null, queryResult)
       }
     })
   }
@@ -112,8 +112,6 @@ module.exports = (dbPoolInstance) => {
     // Actually replace this with a query
     const queryString = 'SELECT * FROM player WHERE token=$1'
     const queryValues = [token]
-    const ipAddress = ip.address()
-    console.log(ipAddress)
     dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
       if (error) {
         callback(error, null)
@@ -255,11 +253,17 @@ module.exports = (dbPoolInstance) => {
       activeQuestion = parseInt(activeQuestion)
       // Possibly refactor to include switch.
       if (gameState === GAME_STATE.QUESTION) {
+        // if (activeQuestion >= maxNumOfQuestions) {
+        //   console.log('Setting game over')
+        //   endGame(gameID, afterNewQuestion)
+        //   return
         setBetweenRounds(gameID, afterNewQuestion)
       } else if (gameState === GAME_STATE.BETWEENROUNDS) {
         const maxNumOfQuestions = queryResponse.number_of_questions
         if (activeQuestion >= maxNumOfQuestions) {
+          console.log('Setting game over')
           endGame(gameID, afterNewQuestion)
+          return
         }
         activeQuestion++
         setActiveQuestion(gameID, activeQuestion, afterNewQuestion)
@@ -277,7 +281,7 @@ module.exports = (dbPoolInstance) => {
         console.log(error)
         controllerCallback(error, null)
       } else {
-        if (queryResponse[0]) {
+        if (queryResponse) {
           gameID = queryResponse[0].game_id
           // What is the current game state for this game?
           currentGameState(gameID, gameStateCallback)
