@@ -21,9 +21,7 @@ class GameOver extends React.Component {
     })
     return (
       <div>
-        <div className="row">
         <h1 id='GameOver'>Scores:</h1>
-        </div>
         <div>
           <table className='table'>
             <thead>
