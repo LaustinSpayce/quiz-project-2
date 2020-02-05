@@ -43,6 +43,22 @@
           })
         }
   ```
+    - Later on I would pass through objects rather than huge amounts of variables. It's more intuitive to pass a "question" object rather than a ton of variables to explain what I want.
+      ```
+      const addNewQuestion = (question, callback) => {
+        const queryString = 'INSERT INTO question (question, answer_1, answer_2, answer_3, answer_4) VALUES ($1, $2, $3, $4, $5) RETURNING *;'
+        const queryValues = [question.question, question.answer_1, question.answer_2, question.answer_3, question.answer_4]
+        console.log(queryValues)
+        dbPoolInstance.query(queryString, queryValues, (error, queryResult) => {
+          if (error) {
+            console.log(error)
+            callback(error, null)
+          } else {
+            callback(null, queryResult.rows[0])
+          }
+        })
+      }
+      ```
 
   For each, please include code examples.
   1. Code snippet up to 20 lines.
