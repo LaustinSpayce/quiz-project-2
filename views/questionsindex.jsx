@@ -23,8 +23,8 @@ class QuestionsIndex extends React.Component {
     })
 
     let optionalMessage = <div></div>
-    console.log('the message:')
-    console.log(this.props.message)
+    // console.log('the message:')
+    // console.log(this.props.message)
 
     if (this.props.message) {
       optionalMessage =  (
