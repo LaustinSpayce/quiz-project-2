@@ -17,13 +17,16 @@
 1. What in my code and program design in the project would I do differently next time?
   - Not start off with overcomplicated 3 models, 3 controllers etc. Keep it simple with 1 (as I boiled down to)
   - Remove code that is redundant, I should refactor a fair amount of it to remove functions I never use.
+  ```
         const startQuestionTimer = () => {
           console.log('Question stops receiving answers in ' + ROUND_TIMER)
         }
         // Never had a question timer implemented!
+        ```
 
 1. What in my code and program design in the project went well? Is there anything I would do the same next time?
   - After a while, keeping all my functions down to "do 1 thing" helped a lot, can keep passing callbacks through each step. EG get player scores:
+  ```
         const getScores = (gameID, callback) => {
           const queryString = 'SELECT * FROM player WHERE game_id = $1;'
           const queryValues = [gameID]
@@ -39,6 +42,7 @@
             }
           })
         }
+        ```
 
   For each, please include code examples.
   1. Code snippet up to 20 lines.
