@@ -10,8 +10,6 @@
     - Testing very early, deploying on Heroku let me work out some bugs that would be a real pain to deal with at a late stage.
     - Using 'dummy functions' - if I needed an extra step in a process, but not written a function for it yet, can just have a dummy function that returns my expected result as a stop-gap and get on with what's important for the app.
 
---
-
 #### Code and Code Design
 
 1. What in my code and program design in the project would I do differently next time?
