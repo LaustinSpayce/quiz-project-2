@@ -1,6 +1,6 @@
 ### Overview
 
-Stu's Trivia Night is a quiz-taking app meant to be taken by multiple people at the same time, ideally in a classroom setting.
+[Stu's Trivia Night](https://project-2-quiz.herokuapp.com/) is a quiz-taking app meant to be taken by multiple people at the same time, ideally in a classroom setting.
 
 ## Gameplay
 
